@@ -1,10 +1,12 @@
 FROM    hhvm/hhvm-proxygen:latest
 LABEL   maintainer="Rafael Campos Nunes <rafaelnunes@engineer.com>"
 
-RUN     rm -rf /var/www
-ADD     ./src /var/www/public
-ADD     server.ini /etc/hhvm/
+#RUN     apt-get update && apt-get install mysql-server -y
 
-RUN     ls /var/www/public
+RUN     rm -rf /var/www
+ADD     ./public/ /var/www/public/
+
+COPY    ./server.ini /etc/hhvm/
 
 EXPOSE  80
+EXPOSE  4000
