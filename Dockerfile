@@ -6,7 +6,7 @@ LABEL   maintainer="Rafael Campos Nunes <rafaelnunes@engineer.com>"
 RUN     rm -rf /var/www
 ADD     ./public/ /var/www/public/
 
-COPY    ./server.ini /etc/hhvm/
+#COPY    ./server.ini /etc/hhvm/
 
 EXPOSE  80
 EXPOSE  4000
