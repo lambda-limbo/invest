@@ -22,6 +22,13 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TB_USER` (
   `USER_NAME` VARCHAR(100) NOT NULL,
   `USER_WALLET` DOUBLE NOT NULL,
   `USER_PASSWORD` VARCHAR(255) NOT NULL,
+  `USER_LOGIN` VARCHAR(20) NOT NULL,
+  `USER_CPF` VARCHAR(20) NOT NULL,
+  `USER_EMAIL` VARCHAR(50) NOT NULL,
+  `USER_DATE_OF_BIRTH` DATE NOT NULL,
+  `USER_CELL_PHONE` VARCHAR(20) NOT NULL,
+  `USER_ADM` INT,
+  
   PRIMARY KEY (`USER_PK`))
 ENGINE = InnoDB;
 
@@ -29,13 +36,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mydb`.`TB_ADM`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TB_ADM` (
-  `ADM_PK` INT NOT NULL,
-  `ADM_NAME` VARCHAR(100) NOT NULL,
-  `ADM_PASSWORD` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`ADM_PK`))
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `mydb`.`TB_COMPANY`
