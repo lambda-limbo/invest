@@ -1,2 +1,6 @@
 <?php
-  echo "Hello Murrica";
+
+  require_once '../app/bootstrap.php';
+  // Run the application
+  
+  $router->run();
