@@ -1,4 +1,10 @@
 <?php
+    /**
+     * 
+     * 
+     */
+        
+
     require_once "../vendor/autoload.php";
 
     // Load the templates folder
