@@ -2,15 +2,26 @@
 <html>
     <head>
         <title>Invest</title>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     </head>
     <body>
         <nav>
+            <ul class="nav">
+            {% for item in navigation %}
+                <li><a href="{{ urls[item] }}" class="navlink">{{ item }}</a></li>
+            {% endfor %}
+            </ul>
         </nav>
-        hello to my webpage
-        <ul id="navigation">
-        {% for item in navigation %}
-            <li><a href="{{ item }}">{{ item }}</a></li>
-        {% endfor %}
-        </ul>
+        
+        <section class="container">
+            {% block content %}{% endblock %}
+        </section>
+        
+
+        <footer>
+
+        </footer>
     </body>
 </html>
