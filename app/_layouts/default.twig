@@ -5,12 +5,13 @@
         <meta charset="utf-8">
 
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/theme.css">
     </head>
-    <body>
-        <nav>
+    <body class="container">
+        <nav class="">
             <ul class="nav">
-            {% for item in navigation %}
-                <li><a href="{{ urls[item] }}" class="navlink">{{ item }}</a></li>
+            {% for item, url in navigation %}
+                <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ item }}</a></li>
             {% endfor %}
             </ul>
         </nav>
@@ -21,7 +22,7 @@
         
 
         <footer>
-
+            
         </footer>
     </body>
 </html>
