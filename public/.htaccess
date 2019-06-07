@@ -1,4 +1,7 @@
 RewriteEngine on
 
+# Allow access to files inside the server such as the assets
+RewriteCond %{REQUEST_FILENAME} !-f
+# Allows the requests to be done without the file extension (php)
 RewriteRule ^ index.php [QSA,L]
 
