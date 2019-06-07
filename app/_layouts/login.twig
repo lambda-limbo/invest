@@ -1,14 +1,20 @@
 {% extends "default.twig" %}
 
 {% block content %}
-<h1>Logins</h1>
+<h1>Login</h1>
 
 <form action="login" method="POST">
-    <label>Usuário</label>
-    <input type="text"/>
-    <label>Senha</label>
-    <input type="password"/>
+    <div class="field">
+        <label>Usuário</label>
+        <input type="text" name="username"/>
+    </div class="field">
+    <div class="field">
+        <label>Senha</label>
+        <input type="password" name="password"/>
+    </div class="field">
 
-    <input type="submit" value="Logar" />
+    <div class="field">
+        <input type="submit" value="Logar" />
+    </div class="field">
 </form>
 {% endblock %}
