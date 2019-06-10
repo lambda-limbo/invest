@@ -7,9 +7,12 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/theme.css">
     </head>
-    <body class="container">
-        <nav class="">
-            <ul class="nav">
+    <body class="">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a href="#" class="navbar-brand">
+                <img src="assets/img/mllr.png" width="125" height="50" alt="MLLR logo">
+            </a>
+            <ul class="navbar-nav ml-auto">
             {% for item, url in navigation %}
                 <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ item }}</a></li>
             {% endfor %}
