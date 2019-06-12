@@ -1,0 +1,109 @@
+{% extends "default.twig" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-5">
+            <div class="">
+                
+                <form method="post" action="sign_up">
+                    <div id="first">
+                        <div class="form-group">
+                            <label for="name">Nome completo</label>
+                            <input type="text" class="form-control" name="name"  placeholder="Digite o seu nome">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Endereço de e-mail</label>
+                            <input type="email" class="form-control" name="email"  placeholder="Digite o seu e-mail">
+                            <small id="emailHelp" class="form-text text-muted">Nós jamais compartilharemos o seu email com outras pessoas.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" class="form-control" name="cpf" placeholder="Digite o seu CPF">
+                            <small id="cpfHelp" class="form-text text-muted">Nós jamais compartilharemos o seu CPF com outras pessoas.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="birth">Data de nascimento</label>
+                            <input type="date" class="form-control" name="birth" placeholder="Digite a sua data de nascimento">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Telefone celular</label>
+                            <input type="tel" class="form-control" nme="phone" placeholder="Digite o seu telefone">
+                        </div>
+                        <button id="next" class="btn btn-primary">Prosseguir</button>
+                    </div>
+
+                    <div id="second" style="display:none;">
+                        <div class="form-group" >
+                            <label for="username">Nome de Usuário</label>
+                            <input type="text" class="form-control" name="username"  placeholder="Digite o nome de usuário">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Senha</label>
+                            <input type="password" class="form-control" name="password"  placeholder="Digite a sua senha">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Criar Conta</button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+
+        <div class="col-7 d-flex flex-column align-self-center">
+            <div class="row justify-content-center"> 
+                <div class="col">
+                    <img src="img/icons/locker.svg" class="rounded img-fluid w-25 float-right" alt="...">
+                </div>
+                <div class="col">
+                    <div class="row"> 
+                        <h4> Segurança para Investir </h4>
+                    </div>
+                    <div class="row"> 
+                        <p class="text-justify">
+                            Várias opções com proteção do FGC. Invista com tranquilidade.
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="row justify-content-center align-items-stretch"> 
+                <div class="col">
+                    <img src="img/icons/users.svg" class="rounded img-fluid float-right" alt="...">
+                   
+                </div>
+                <div class="col">
+                    <div class="row"> 
+                        <h4> Suporte Diário </h4>
+                    </div>
+                    <div class="row"> 
+                        <p class="text-justify">
+                            Time de analistas dedicado a auxiliar em suas operações.
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="row justify-content-center"> 
+                <div class="col">
+                    <img src="img/icons/growth.svg" class="rounded img-fluid w-25 float-right" alt="...">
+                   
+                </div>
+                <div class="col">
+                    <div class="row"> 
+                        <h4> Melhor Custo X Benefício </h4>
+                    </div>
+                    <div class="row"> 
+                        <p class="text-justify">
+                            Para o trader que opera frequentemente.
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>    
+
+
+    <script src="assets/js/form.js"></script>   
+{% endblock %}
