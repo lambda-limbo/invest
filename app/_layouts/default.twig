@@ -1,28 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <head>
         <title>Invest</title>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/theme.css">
+        <link href="assets/css/theme.css" rel="stylesheet">
+        <link href="assets/css/all.min.css" rel="stylesheet">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     </head>
-    <body class="container">
-        <nav class="">
-            <ul class="nav">
-            {% for item, url in navigation %}
-                <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ item }}</a></li>
-            {% endfor %}
-            </ul>
+    <body class="">
+        <nav class="navbar navbar-expand-md navbar-light">
+            <a class="navbar-brand" href=""><img alt="MLLR" src="asserts/img/logo.png"></a>
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto navbar-nav">
+                    {% for item, url in navigation %}
+                        <li class="nav-item">
+                            <a href="{{ url }}" class="nav-link">{{ item }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </nav>
-        
-        <section class="container">
-            {% block content %}{% endblock %}
-        </section>
-        
 
-        <footer>
-            
-        </footer>
-    </body>
-</html>
+        <section class="container gap-top"> {% block content %}{% endblock %}
+            </section>
+
+
+            <footer class="bg-darker text-whiter">
+                <div class="row p-2">
+                    <div class="col-sm">
+                        <img alt="MLLR Logo" src="asserts/img/logo.png">
+                    </div>
+                    <address class="col-sm">
+                        <h4>MLLR INVESTIMENTOS</h4>
+                        <small>Prolongamento da Rua Cerejeira, s/n CEP 85892-000 - Bairro São Luiz - Santa Helena - PR - Brasil</small>
+                        <small>Telefone Geral +55 (45) 3268-8800</small>
+                    </address>
+                    <div class="col-sm text-center ">
+                        <h4>REDES SOCIAIS</h4>
+                        <div class=".bg-dark pt-2 ">
+                            <a class="mr-4" href="#">
+                                <i class="fab fa-facebook fa-2x"></i>
+                            </a>
+                            <a class="mr-4" href="#">
+                                <i class="fab fa-instagram fa-2x"></i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-twitter fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 d-flex justify-content-center">
+                    <p>Todos os direitos reservados a MLLR © 2019</p>
+                </div>
+            </footer>
+        </body>
+    </html>
+</body></html></body></html>
