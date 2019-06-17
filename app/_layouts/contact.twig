@@ -1,0 +1,37 @@
+{% extends "default.twig" %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col">
+		<img src="assets/img/contato.png">
+	</div>
+	<div class="col">
+		<form action="/contact" method="POST">
+		    <div class="form-group">
+		        <label>Nome Completo</label>
+		        <input type="text" name="username" class="form-control" placeholder="Luiz Otavio" required>
+		    </div>
+		    
+		    <div class="form-group">
+		        <label>E-mail</label>
+		        <input type="text" name="email" class="form-control" placeholder="email@exemplo.com.br" required>
+		    </div>
+
+		    <div class="form-group">
+		        <label>Telefone Celular</label>
+		        <input type="text" name="celular" class="form-control" placeholder="(47)98877-6555" required >
+		    </div>
+
+		    <div class="form-group">
+		    	<label>Mensagem</label>
+		        <textarea name="mensagem" id="" cols="30" rows="7" class="form-control" placeholder="Sua mensagem" required></textarea>
+		    </div>
+
+		    <div class="form-group" align="right">
+		        <input type="submit" class="btn btn-success" value="Enviar" />
+		    </div>
+		</form>
+	</div>
+</div>
+{% endblock %}
