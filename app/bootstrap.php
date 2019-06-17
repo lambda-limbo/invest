@@ -19,23 +19,32 @@
     
     $router = new \Bramus\Router\Router();
 
+    
+
+    // Global routing variable
+    $routes = array('quem somos' => '/about', 
+                    'investimentos' => '/investments', 
+                    'contatos' => '/contact', 
+                    'login' => '/login',  
+                    'abra sua conta' => '/signup');
+
+
+    $twig->addGlobal('navigation', $routes);
+
     // Define all the routes of the system
     $router->get('/', function() use($twig) {
-        echo $twig->render('default.twig', ['navigation' => array('quem somos' => '/about', 'investimentos' => 'investments', 'contatos' => 'contact', 'login' => 'login', 
-                                            'abra sua conta' => '/signup', '' => '/')]);
+        echo $twig->render('home.twig');
     });
 
     $router->get('/login', function() use($twig) {
-       echo $twig->render('login.twig', ['navigation' => array('quem somos' => '/about', 'investimentos' => '/investments', 'contatos' => '/contact', 'login' => 'login', 
-                                         'abra sua conta' => '/signup')]);
+       echo $twig->render('login.twig');
     });
 
     $router->post('/login', function() use($twig) {
     });
 
     $router->get('/about', function() use($twig) {
-        echo $twig->render('about.twig', ['navigation' => array('quem somos' => '/about', 'investimentos' => '/investments', 'contatos' => '/contact', 'login' => 'login', 
-                                          'abra sua conta' => '/signup')]);
+        echo $twig->render('about.twig');
     });
 
     $router->set404(function()  use($twig) {
