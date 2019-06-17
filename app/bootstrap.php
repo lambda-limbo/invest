@@ -26,7 +26,7 @@
                     'investimentos' => '/investments', 
                     'contatos' => '/contact', 
                     'login' => '/login',  
-                    'abra sua conta' => '/signup');
+                    'abra sua conta' => '/sign_up');
 
 
     $twig->addGlobal('navigation', $routes);
@@ -45,6 +45,18 @@
 
     $router->get('/about', function() use($twig) {
         echo $twig->render('about.twig');
+    });
+
+    $router->get('/sign_up', function() use($twig) {
+        echo $twig->render('sign_up.twig');
+    });
+
+    $router->post('/sign_up', function() use($twig) {
+        
+    });
+
+    $router->get('/investments', function() use($twig) {
+        echo $twig->render('investments.twig');
     });
 
     $router->set404(function()  use($twig) {
