@@ -1,20 +1,43 @@
 {% extends "default.twig" %}
 
 {% block content %}
-<h1>Login</h1>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-6 ">
+                <form action="/login" method="POST" class="border p-5">
+                    <h4>ACESSO À PLATAFORMA</h4>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="far fa-user"></i>
+                                </div>
+                            </div>
+                            <input type="text" name="user" class="form-control" placeholder="Usuário" required>
+                        </div> 
+                    </div>
 
-<form action="login" method="POST">
-    <div class="field">
-        <label>Usuário</label>
-        <input type="text" name="username"/>
-    </div class="field">
-    <div class="field">
-        <label>Senha</label>
-        <input type="password" name="password"/>
-    </div class="field">
-
-    <div class="field">
-        <input type="submit" value="Logar" />
-    </div class="field">
-</form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">        
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                            <input type="password" class="form-control" name="password" placeholder="Senha" required>
+                        </div> 
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col d-flex align-items-center">
+                            <a href="#" class="btn btn-sm btn-link"><p>Esqueci minha senha</p></a>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <input type="submit" class="form-control btn btn-dark" name="" value="Login">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 {% endblock %}
