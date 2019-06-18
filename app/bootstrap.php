@@ -59,6 +59,10 @@
         echo $twig->render('investments.twig');
     });
 
+    $router->get('/investments', function() use($twig) {
+        echo $twig->render('contact.twig');
+    });
+
     $router->set404(function()  use($twig) {
         header('HTTP/1.1 404 Not Found');
         // ... do something special here
