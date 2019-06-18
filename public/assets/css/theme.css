@@ -2,17 +2,16 @@
  * Bootstrap overrides and improvements
  */
 
-nav>* {
+nav > * {
     text-transform: uppercase;
 }
 
 section {
-    height: calc(100vh - 40vh);
+    min-height: calc(100vh - 300px);
 }
 
 footer {
-    height: 40vh;
-    color: #777;
+    height: 300px;
 }
 
 
