@@ -1,7 +1,6 @@
 <?php
     /**
-     * 
-     * 
+     * The initial file that serves the client with pages of the system.
      */
         
 
@@ -18,8 +17,6 @@
 
     
     $router = new \Bramus\Router\Router();
-
-    
 
     // Global routing variable
     $routes = array('quem somos' => '/about', 
