@@ -29,7 +29,11 @@
             <div class="collapse navbar-collapse" id="collapsible-navbar">
                 <ul class="navbar-nav ml-auto">
                 {% for item, url in navigation %}
-                    <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ item }}</a></li>
+                    {% if item == "abra sua conta" %}
+                        <li class="nav-item"><a href="{{ url }}" class="btn btn-outline-success ml-2">{{ item }}</a></li>
+                    {% else %}
+                        <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ item }}</a></li>
+                    {% endif %}
                 {% endfor %}
                 </ul>
             </div>
@@ -41,7 +45,7 @@
 
         <footer class="bg-darker text-whiter mt-5">
             <div class="row p-2">
-                <div class="col-sm">
+                <div class="col-sm d-flex justify-content-center">
                     <img alt="MLLR Logo" src="assets/img/logo/mllr.png" width="256" height="128">
                 </div>
                 <address class="col-sm">
@@ -49,7 +53,7 @@
                     <small>Prolongamento da Rua Cerejeira, s/n CEP 85892-000 - Bairro São Luiz - Santa Helena - PR - Brasil</small>
                     <small>Telefone Geral +55 (45) 3268-8800</small>
                 </address>
-                <div class="col-sm text-center ">
+                <div class="col-sm text-center">
                     <h4>REDES SOCIAIS</h4>
                     <div class="pt-2">
                         <a class="mr-4" href="#">
