@@ -1,46 +1,65 @@
 {% extends "default.twig" %}
 
 {% block content %}
+    <style>
+        /** Fix the position of the checkbox (gambi) */
+        label.custom-control-label::before {
+            top: .10rem !important;
+        }
+        label.custom-control-label::after {
+            top: .15rem !important;
+        }
+    </style>
+
     <div class="row">
         <div class="col-md-5">
-            <form method="post" action="sign_up">
+            <form method="post" action="sign_up" spellcheck="false">
                 <div id="first">
                     <div class="form-group">
                         <label for="name">Nome completo</label>
-                        <input type="text" class="form-control" name="name"  placeholder="Digite o seu nome">
+                        <input type="text" class="form-control" name="name"  placeholder="Fulano de Tal" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Endereço de e-mail</label>
-                        <input type="email" class="form-control" name="email"  placeholder="Digite o seu e-mail">
+                        <input type="email" class="form-control" name="email"  placeholder="fulano@outlook.com" required>
                         <small class="form-text text-muted">Nós jamais compartilharemos o seu email com outras pessoas.</small>
                     </div>
                     <div class="form-group">
                         <label for="cpf">CPF</label>
-                        <input type="text" class="form-control" name="cpf" placeholder="Digite o seu CPF">
-                        <small class="form-text text-muted">Nós jamais compartilharemos o seu CPF com outras pessoas.</small>
+                        <input type="text" class="form-control" name="cpf" placeholder="015.868.265-90" required>
                     </div>
                     <div class="form-group">
                         <label for="birth">Data de nascimento</label>
-                        <input type="date" class="form-control" name="birth" placeholder="Digite a sua data de nascimento">
+                        <input type="date" class="form-control" name="birth" placeholder="Digite a sua data de nascimento" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Telefone celular</label>
-                        <input type="tel" class="form-control" nme="phone" placeholder="Digite o seu telefone">
+                        <input type="tel" class="form-control" nme="phone" placeholder="(99) 9 9999-9999" title="Coloque as informações de acordo com o padrão mostrado" required>
                     </div>
-                    <button id="next" class="btn btn-primary">Prosseguir</button>
+                    <div class="form-group text-right">
+                        <button id="next" class="btn btn-primary">PROSSEGUIR</button>
+                    </div>
                 </div>
 
                 <div id="second" style="display:none">
                     <div class="form-group" >
                         <label for="username">Nome de Usuário</label>
-                        <input type="text" class="form-control" name="username"  placeholder="Digite o nome de usuário">
+                        <input type="text" class="form-control" name="username"  placeholder="Escolha um nome de usuário bem legal!" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" name="password"  placeholder="Digite a sua senha">
+                        <input type="password" class="form-control" name="password"  placeholder="De preferência utilize caracteres especiais" required>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">Criar Conta</button>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox text-right text-sm">
+                            <small><input type="checkbox" class="custom-control-input" id="tos" required>
+                            <label class="custom-control-label text-muted" for="tos">Aceito os <a href="TOS">TERMOS E CONDIÇÕES DE USO</a> da plataforma</label></small>
+                        </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <button id="back" class="btn btn-light">VOLTAR</button>
+                        <button type="submit" class="btn btn-primary">CRIAR CONTA</button>
+                    </div>
                 </div>
             </form> 
         </div>
