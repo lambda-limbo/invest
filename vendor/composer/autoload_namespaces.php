@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
+    'Evenement' => array($vendorDir . '/evenement/evenement/src'),
     'Bramus' => array($vendorDir . '/bramus/router/src'),
 );
