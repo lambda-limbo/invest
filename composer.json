@@ -2,5 +2,11 @@
     "require": {
         "twig/twig": "^2.0",
         "bramus/router": "^1.4"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Invest\\": "app/"
+        }
     }
 }
