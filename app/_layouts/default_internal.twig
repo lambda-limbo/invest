@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>Invest</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+        <base href="{{ base_url }}">
+
+        <link href="assets/img/logo/favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <link href="assets/css/theme.css" rel="stylesheet">
+        <link href="assets/css/all.min.css" rel="stylesheet">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="">
+        <nav class="navbar navbar-expand-md navbar-light">
+            <a class="navbar-brand" href=""><img height="50" src="assets/img/logo/mllr.png" width="125"></a>
+            <!-- Toggler Button -->
+            <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto navbar-nav">
+                    {% for item, url in navigation_internal %}
+                        <li class="nav-item">
+                            <a href="{{ base_url }}internal{{ url }}" class="nav-link">{{ item }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </nav>
+
+        <section class="container  mt-5">
+            {% block content %}
+                <h1>teste</h1>
+            {% endblock %}
+        </section>
+
+        
+        <script defer src="assets/js/jquery.min.js"></script>
+        <script defer src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+        {% block scripts %}
+        {% endblock %}
+    </body>
+</html>
