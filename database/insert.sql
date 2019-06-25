@@ -10,3 +10,4 @@ CALL P_INSERT_ADM('Rafael Campos Nunes', 'ranu', '1nv35t@admin@ccoun1', '0208693
                   '999211031', '0000-00-00 00:00:00', 0.0);
 CALL P_INSERT_ADM('Luiz Otavio Goebrey', 'ranu', '1nv35t@admin@ccoun2', '02654362950', 'luiz@invest.com', 
                   '996214862', '0000-00-00 00:00:00', 0.0);
+CALL P_INSERT_STOCK(255, 244,233,222,1,23);
