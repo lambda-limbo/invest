@@ -3,105 +3,80 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-sm-8">
+            <div class="col-sm">
                 <div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
             </div>
-            <div class="col-sm-4">
-                <form>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="inputEmail3">Data Inicial</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="inputEmail3" placeholder="Data Inicial" type="Date">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="inputPassword3">Data Final</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" id="inputPassword3" placeholder="Data Final" type="Date">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <button class="btn btn-outline-secondary" type="submit">Gerar Relatorio</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
 
-
-        <div class="container">
-            <div class="row align-items-start">
-                <div class="col">
-                    <div class="card border-secondary mb-3" style="width: 18rem;">
-                        <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
-                        <div class="card-body text-secondary">
-                            <h5 class="card-title">Título do card</h5>
-                            <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                            <a class="btn btn-outline-secondary" href="#">Visitar</a>
-                        </div>
+    <div class="container">
+        <div class="row align-items-start">
+            <div class="col">
+                <div class="card border-secondary mb-3" style="width: 18rem;">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <div class="card-body text-secondary">
+                        <h5 class="card-title">Título do card</h5>
+                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
+                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
                     </div>
                 </div>
-               <div class="col">
-                    <div class="card border-secondary mb-3" style="width: 18rem;">
-                        <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
-                        <div class="card-body text-secondary">
-                            <h5 class="card-title">Título do card</h5>
-                            <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                            <a class="btn btn-outline-secondary" href="#">Visitar</a>
-                        </div>
+            </div>
+            <div class="col">
+                <div class="card border-secondary mb-3" style="width: 18rem;">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <div class="card-body text-secondary">
+                        <h5 class="card-title">Título do card</h5>
+                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
+                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card border-secondary mb-3" style="width: 18rem;">
-                        <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
-                        <div class="card-body text-secondary">
-                            <h5 class="card-title">Título do card</h5>
-                            <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                            <a class="btn btn-outline-secondary" href="#">Visitar</a>
-                        </div>
+            </div>
+            <div class="col">
+                <div class="card border-secondary mb-3" style="width: 18rem;">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <div class="card-body text-secondary">
+                        <h5 class="card-title">Título do card</h5>
+                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
+                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+{% endblock %}
 
+{% block scripts %}
+    <script>
+        var trace1 = {
+            x: [80],
+            y: ['R$'],
+            name: 'Carteira',
+            orientation: 'h',
+            marker: {
+                color: 'rgba(55,128,191,0.6)',
+                width: 1
+            },
+            type: 'bar'
+        };
 
-    {% endblock %}
+        var trace2 = {
+            x: [20],
+            y: ['R$'],
+            name: 'Ativos',
+            orientation: 'h',
+            type: 'bar',
+            marker: {
+                color: 'rgba(255,153,51,0.6)',
+                width: 1
+            }
+        };
 
-    {% block scripts %}
-        <script>
-            var trace1 = {
-                x: [80],
-                y: ['R$'],
-                name: 'Carteira',
-                orientation: 'h',
-                marker: {
-                    color: 'rgba(55,128,191,0.6)',
-                    width: 1
-                },
-                type: 'bar'
-            };
+        var data = [trace1, trace2];
 
-            var trace2 = {
-                x: [20],
-                y: ['R$'],
-                name: 'Ativos',
-                orientation: 'h',
-                type: 'bar',
-                marker: {
-                    color: 'rgba(255,153,51,0.6)',
-                    width: 1
-                }
-            };
+        var layout = {
+            title: 'Minha Carteira',
+            barmode: 'stack'
+        };
 
-            var data = [trace1, trace2];
-
-            var layout = {
-                title: 'Minha Carteira',
-                barmode: 'stack'
-            };
-
-            Plotly.newPlot('myDiv', data, layout);
-        </script>
-    {% endblock %}
+        Plotly.newPlot('myDiv', data, layout);
+    </script>
+{% endblock %}

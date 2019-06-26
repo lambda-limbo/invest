@@ -4,13 +4,7 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <button type="button" class="btn btn-primary btn-sm">Botão pequeno</button>
-                <button type="button" class="btn btn-primary btn-sm">Botão pequeno</button>
-                <button type="button" class="btn btn-primary btn-sm">Botão pequeno</button>
-                <button type="button" class="btn btn-primary btn-sm">Botão pequeno</button>
-                
-                <div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
-                
+                <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
             </div>
         </div>
         <div class="row">
@@ -112,6 +106,6 @@
             barmode: 'group'
         };
 
-        Plotly.newPlot('myDiv', data, layout);
+        Plotly.newPlot('chart', data, layout);
     </script>
 {% endblock %}

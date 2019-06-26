@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+                <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
             </div>
         </div>
     </div>
@@ -12,7 +12,6 @@
 
 {% block scripts %}
     <script>
-
         var data = [
             {
                 values: [
@@ -38,7 +37,7 @@
                 domain: {
                     column: 1
                 },
-                name: 'Ativos',
+                name: '',
                 hoverinfo: 'label+percent+name',
                 hole: .7,
                 type: 'pie'
@@ -46,7 +45,7 @@
         ];
 
         var layout = {
-            title: 'Minha Carteira',
+            title: '',
             grid: {
                 rows: 1,
                 columns: 2
@@ -61,18 +60,10 @@
                     text: 'CARTEIRA',
                     x: 0.,
                     y: 0.5
-                }, {
-                    font: {
-                        size: 14
-                    },
-                    showarrow: false,
-                    text: 'ATIVOS',
-                    x: 0.8,
-                    y: 0.5
                 }
             ]
         };
 
-        Plotly.newPlot('myDiv', data, layout, {showSendToCloud: true});
+        Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
     </script>
 {% endblock %}

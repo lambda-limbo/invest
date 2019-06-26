@@ -29,7 +29,7 @@
                             <a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-outline-dark ml-2">{{ item }} <i class="{{ value['icon']}}"></i> </a>
                         </li>
                         {% else %}
-                        <li class="nav-item"><a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-light"><i class="{{ value['icon']}}"></i> {{ item }}</a></li>
+                        <li class="nav-item"><a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-light mr-2"><i class="{{ value['icon']}}"></i> {{ item }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
