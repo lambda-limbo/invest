@@ -1,5 +1,10 @@
-<?php
+<?php declare(strict_types=1);
+
     namespace Invest;
+
+    use Invest\Middleware\Authentication;
+    use Invest\Middleware\Redirection;
+    use Invest\Middleware\Session;
 
     // Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
@@ -25,10 +30,15 @@
     });
 
     $router->get('/login', function() use($twig) {
-       echo $twig->render('login.twig');
+        if (Session::exists("USER")) {
+            Redirection::to('/internal');
+        } else {
+            echo $twig->render('login.twig');
+        }
     });
 
     $router->post('/login', function() use($twig) {
+        
     });
 
     $router->get('/about', function() use($twig) {
@@ -47,31 +57,52 @@
         echo $twig->render('investments.twig');
     });
 
-    $router->get('/investments', function() use($twig) {
+    $router->get('/contact', function() use($twig) {
         echo $twig->render('contact.twig');
+    });
+
+    $router->post('/contact', function() use($twig) {
+        // It's ideal that the messages are sent over the websockets endpoint.
     });
 
     $router->mount('/internal', function() use ($router, $twig) {
         $router->get('/', function() use ($twig) {
-            echo $twig->render('dashboard.twig');
+            if (Session::exists("USER")) {
+                echo $twig->render('dashboard.twig');
+            } else {
+                Redirection::out();
+            }
         });
 
         $router->get('/wallet', function() use($twig) {
-            echo $twig->render('wallet.twig');
+            if (Session::exists("USER")) {
+                echo $twig->render('wallet.twig');
+            } else {
+                Redirection::out();
+            }
         });
 
         $router->get('/stocks', function() use($twig) {
-            echo $twig->render('stocks.twig');
+            if (Session::exists("USER")) {
+                echo $twig->render('stocks.twig');
+            } else {
+                Redirection::out();
+            }
         });
 
         
         $router->get('/reports', function() use($twig) {
-            echo $twig->render('reports.twig');
+            if (Session::exists("USER")) {
+                echo $twig->render('reports.twig');
+            } else {
+                Redirection::out();
+            }
         });
 
         
         $router->get('/exit', function() use($twig) {
-            echo $twig->render('exit.twig');
+            Session::destroy("USER");
+            Redirection::out();
         });
     });
 
