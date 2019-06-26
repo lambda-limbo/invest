@@ -14,4 +14,4 @@
 
     $router = new \Bramus\Router\Router();
 
-    require_once 'routing.php';
+    require_once 'Routing.php';
