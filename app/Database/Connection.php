@@ -23,10 +23,12 @@
                 $pass = $settings["password"];
                 $database = $settings["database"];
                 
-                self::$connection = mysqli_connect($host, $user, $pass, $database, $port, null);
-
-                if ($connection->connect_errno) {
-                    throw new DatabaseException("Could not connect to the database with the currenct settings. ERRNO: $connection->connect_error");
+                try {
+                    self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$database", $user, $pass, array(
+                        PDO::ATTR_PERSISTENT => true
+                    ));
+                } catch (PDOException $e) { 
+                    throw new DatabaseException("Could not connect to the database with the currenct settings. PDOException: $e->getMessage()");
                 }
             }
 
