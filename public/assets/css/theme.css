@@ -1,3 +1,28 @@
+/**
+ * Bootstrap overrides and improvements
+ */
+
 nav > * {
     text-transform: uppercase;
+}
+
+section {
+    min-height: calc(100vh - 300px);
+}
+
+footer {
+    height: 300px;
+}
+
+
+/**
+ * Theme specific classes
+ */
+
+.text-whiter {
+    color: rgb(250, 250, 250);
+}
+
+.bg-darker {
+    background: rgb(30, 30, 30);
 }

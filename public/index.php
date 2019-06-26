@@ -1,6 +1,5 @@
 <?php
-
-require_once  '../app/bootstrap.php';
+    require_once  '../app/bootstrap.php';
  
-// Run the application 
-$router->run();
+    // Run the application 
+    $router->run();
