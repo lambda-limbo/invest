@@ -9,11 +9,11 @@
                     'abra sua conta' => '/sign_up');
 
 
-    $internal = array('dashboard' => '/dashboard', 
-                      'carteira'=>'/wallet',
-                      'ativos'=>'/stocks',
-                      'relatorios'=>'/reports',
-                      'sair'=>'/exit');
+    $internal = array('dashboard' => array('url' => '/', 'icon' => 'fas fa-home'), 
+                      'carteira'=> array('url' => '/wallet', 'icon' => 'fa fa-wallet'),
+                      'ativos'=> array('url' => '/stocks', 'icon' => 'fa fa-layer-group'),
+                      'relatórios'=> array('url' => '/reports', 'icon' => 'fa fa-file-pdf'),
+                      'sair'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
 
     $twig->addGlobal('navigation', $routes);
     $twig->addGlobal('navigation_internal', $internal);
@@ -51,8 +51,8 @@
         echo $twig->render('contact.twig');
     });
 
-    $router->mount('/internal', function () use ($router, $twig) {
-        $router->get('/dashboard', function() use($twig) {
+    $router->mount('/internal', function() use ($router, $twig) {
+        $router->get('/', function() use ($twig) {
             echo $twig->render('dashboard.twig');
         });
 
