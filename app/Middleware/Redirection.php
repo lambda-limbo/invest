@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+    namespace Invest\Middleware;
+
     final class Redirection {
         private function __construct() {}
 
