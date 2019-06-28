@@ -3,6 +3,9 @@
 
     require_once "../vendor/autoload.php";
 
+    // Initialize the session of the server
+    session_start();
+
     // Load the templates folder
     $loader = new \Twig\Loader\FilesystemLoader('../app/_layouts');
 
