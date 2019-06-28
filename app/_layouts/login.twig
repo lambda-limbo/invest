@@ -3,7 +3,7 @@
 {% block content %}
         <div class="row d-flex justify-content-center">
             <div class="col-md-6 ">
-                <form action="/login" method="POST" class="border p-5" autocomplete="off">
+                <form action="/login" method="POST" class="border p-5 needs-validation " autocomplete="off" novalidate>
                     <h4>ACESSO À PLATAFORMA</h4>
                     <div class="form-group">
                         <div class="input-group">
@@ -12,7 +12,10 @@
                                     <i class="far fa-user"></i>
                                 </div>
                             </div>
-                            <input type="text" name="user" class="form-control" placeholder="Usuário" required>
+                            <input type="text" name="username" class="form-control {{ username_css }}" placeholder="Usuário" value="{{ username }}" required>
+                            <div class="invalid-feedback">
+                                Por favor, coloque o nome de usuário.
+                            </div>
                         </div> 
                     </div>
 
@@ -23,7 +26,10 @@
                                     <i class="fas fa-lock"></i>
                                 </div>
                             </div>
-                            <input type="password" class="form-control" name="password" placeholder="Senha" required>
+                            <input type="password" class="form-control {{ password_css }}" name="password" placeholder="Senha" value="{{ password }}" required>
+                            <div class="invalid-feedback">
+                                Por favor, coloque a senha.
+                            </div>
                         </div> 
                     </div>
                     
@@ -36,6 +42,10 @@
                                 <input type="submit" class="form-control btn btn-primary" name="" value="LOGIN">
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-group text-danger text-center">
+                        <label>{{ error }}</label>
                     </div>
                 </form>
             </div>

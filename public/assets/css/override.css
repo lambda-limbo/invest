@@ -1,0 +1,8 @@
+input[type="text"].form-control, 
+textarea.form-control {
+    border-radius: 0px;
+}
+
+.form-control:focus {
+    /* */
+}
