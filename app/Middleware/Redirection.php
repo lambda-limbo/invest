@@ -6,7 +6,7 @@
         private function __construct() {}
 
         public static function to($where) {
-            header('Location: /{$where}');
+            header('Location: /' . $where);
         }
 
         public static function out() {
