@@ -31,14 +31,35 @@
 
     $router->get('/login', function() use($twig) {
         if (Session::exists("USER")) {
-            Redirection::to('/internal');
+            Redirection::to('internal');
         } else {
             echo $twig->render('login.twig');
         }
     });
 
     $router->post('/login', function() use($twig) {
-        
+        $username_css = '';
+        $password_css = '';
+        $error_message = '';
+
+        if (strlen($_POST["username"]) == 0) { $username_css = 'is-invalid'; }
+        if (strlen($_POST["password"]) == 0) { $password_css = 'is-invalid'; }
+
+        $auth = Authentication::authenticate($_POST["username"], $_POST["password"]);
+
+        if (strlen($username_css) == 0 && strlen($password_css) == 0 && !$auth) {
+            $error_message = 'Usuário ou senha incorretos.';
+        }
+
+        if ($auth) {
+            Redirection::to('internal');
+        } else {
+            echo $twig->render('login.twig', array('error' => $error_message,
+                                                   'username_css' => $username_css,
+                                                   'password_css' => $password_css,
+                                                   'username' => $_POST["username"],
+                                                   'password' => $_POST["password"]));
+        }
     });
 
     $router->get('/about', function() use($twig) {
@@ -65,43 +86,42 @@
         // It's ideal that the messages are sent over the websockets endpoint.
     });
 
+
+    // Middleware to check if the user has been logged in. For some reason I 
+    // two of them because the reges (internal/.*)|(internal/) doesn't work.
+    $router->before('GET|POST',  'internal/.*', function() use ($twig) {
+        if (!Session::exists("USER")) {
+            Redirection::out();
+        }
+    });
+
+    $router->before('GET|POST',  'internal/', function() use ($twig) {
+        if (!Session::exists("USER")) {
+            Redirection::out();
+        }
+    });
+
     $router->mount('/internal', function() use ($router, $twig) {
         $router->get('/', function() use ($twig) {
-            if (Session::exists("USER")) {
-                echo $twig->render('dashboard.twig');
-            } else {
-                Redirection::out();
-            }
+            echo $twig->render('dashboard.twig');
         });
 
         $router->get('/wallet', function() use($twig) {
-            if (Session::exists("USER")) {
-                echo $twig->render('wallet.twig');
-            } else {
-                Redirection::out();
-            }
+            echo $twig->render('wallet.twig');
         });
 
         $router->get('/stocks', function() use($twig) {
-            if (Session::exists("USER")) {
-                echo $twig->render('stocks.twig');
-            } else {
-                Redirection::out();
-            }
+            echo $twig->render('stocks.twig');
         });
 
         
         $router->get('/reports', function() use($twig) {
-            if (Session::exists("USER")) {
-                echo $twig->render('reports.twig');
-            } else {
-                Redirection::out();
-            }
+            echo $twig->render('reports.twig');
         });
 
         
         $router->get('/exit', function() use($twig) {
-            Session::destroy("USER");
+            Session::clear();
             Redirection::out();
         });
     });
