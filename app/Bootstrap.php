@@ -1,7 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
     namespace Invest;
 
     require_once "../vendor/autoload.php";
+
+    use Invest\Websockets\Sockets;
+    use Ratchet\Server\IoServer;
 
     // Initialize the session of the server
     session_start();
@@ -18,3 +22,12 @@
     $router = new \Bramus\Router\Router();
 
     require_once 'Routing.php';
+
+    // The websocket has to be created after the routing file has loaded. 
+    // FIXME: This doesn't work well
+    $ws = IoServer::factory(
+        new Sockets(),
+        8008
+    );
+
+    
