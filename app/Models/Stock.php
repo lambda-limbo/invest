@@ -1,7 +1,7 @@
 <?php
 
 namespace Invest\Models;
-include ('Company.php');
+use Invest\Models\Company;
 class Stock {
 	private $minimium;
 	private $maximum;
@@ -10,6 +10,16 @@ class Stock {
 	private $close_value;
 	private $company;
 
+
+	public function __construct($minimium, $maximum, $opening, $value, $close_value, $company){
+		$this->minimium = $minimium;
+		$this->maximum = $maximum;
+		$this->opening = $opening;
+		$this->value = $value;
+		$this->close_value = $close_value;
+		$this->company = $company;
+
+	}
 	public function getMinimium(){
 		return $this->minimium;
    	}
@@ -50,15 +60,5 @@ class Stock {
    	}
    	public function setCompany($company){
        	$this->company = $company;
-	}
-
-    public function __construct($minimium, $maximum, $opening, $value, $close_value, $company){
-		$this->minimium = $minimium;
-		$this->maximum = $maximum;
-		$this->opening = $opening;
-		$this->value = $value;
-		$this->close_value = $close_value;
-		$this->company = $company;
-
 	}
 }

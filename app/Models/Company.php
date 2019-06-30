@@ -1,11 +1,17 @@
 <?php
 
 namespace Invest\Models;
-include ('CompanyHistory.php');
+use Invest\Models\CompanyHistory;
 class Company {
     private $name;
     private $info
     private $symbol;
+
+    public function __construct($name, $info, $symbol){
+        $this->name = $name;
+        $this->info = $info;
+        $this->symbol = $symbol;
+    }
 
     public function getName(){
        	return $this->name;
@@ -27,10 +33,4 @@ class Company {
    	public function setSymbol($symbol){
        	$this->symbol = $symbol;
    	}
-
-	public function __construct($name, $info, $symbol){
-		$this->name = $name;
-		$this->info = $info;
-		$this->symbol = $symbol;
-	}
 }

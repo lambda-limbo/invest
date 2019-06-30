@@ -1,7 +1,7 @@
 <?php
 
 namespace Invest\Models;
-include ('Company.php');
+use Invest\Models\Company;
 class CompanyHistory {
     private $minimium;
     private $maximum;
@@ -9,6 +9,15 @@ class CompanyHistory {
     private $opening_value;
     private $close_value;
     private $company;
+
+    public function __construct($minimium, $maximum, $history_date, $opening_value, $close_value, $company){
+        $this->minimium = $minimium;
+        $this->maximum = $maximum;
+        $this->history_date = $history_date;
+        $this->opening_value = $opening_value;
+        $this->close_value = $close_value;
+        $this->company = $company;
+    }
 
     public function getMinimium(){
        	return $this->minimium;
@@ -51,18 +60,4 @@ class CompanyHistory {
     public function setCompany($company){
         $this->company = $company;
     }
-   	
-
-	public function __construct($minimium, $maximum, $history_date, $opening_value, $close_value, $company){
-		  $this->minimium = $minimium;
-		  $this->maximum = $maximum;
-		  $this->history_date = $history_date;
-      $this->opening_value = $opening_value;
-      $this->close_value = $close_value;
-      $this->company = $company;
-
-	}
-
-
-  
 }

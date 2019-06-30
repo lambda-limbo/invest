@@ -1,8 +1,8 @@
 <?php
 
 namespace Invest\Models;
-include ('User.php');
-include ('Stock.php');
+use Invest\Models\User;
+use Invest\Models\Stock;
 class Transaction {
     private $date;
     private $type;
@@ -11,6 +11,14 @@ class Transaction {
     private $user;
     private $stock;
 
+    public function __construct($date, $type, $quantity, $total, $user, $stock){
+         $this->date = $date;
+         $this->type = $type;
+         $this->quantity = $quantity;
+         $this->total = $total;
+         $this->user = $user;
+         $this->stock = $stock;
+    }
     
     public function getDate(){
         return $this->date;
@@ -52,16 +60,5 @@ class Transaction {
     }
     public function setStock($stock){
         $this->stock = $stock;
-    }
-
-    public function __construct($date, $type, $quantity, $total, $user, $stock){
-         $this->date = $date;
-         $this->type = $type;
-         $this->quantity = $quantity;
-         $this->total = $total;
-         $this->user = $user;
-         $this->stock = $stock;
-
-
     }
 }
