@@ -18,7 +18,6 @@ class Stock {
 		$this->value = $value;
 		$this->close_value = $close_value;
 		$this->company = $company;
-
 	}
 	public function getMinimium(){
 		return $this->minimium;
