@@ -12,7 +12,6 @@ class Company {
         $this->info = $info;
         $this->symbol = $symbol;
     }
-
     public function getName(){
        	return $this->name;
    	}
