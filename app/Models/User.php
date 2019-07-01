@@ -36,7 +36,7 @@ class User {
 
     public function getWallet() {
         return $this->wallet;
-   	}
+    }
 
     public function setWallet($wallet) {
         $this->wallet = $wallet;
@@ -49,11 +49,11 @@ class User {
         $this->password = $password;
     }
 
-   	public function getLogin() {
+    public function getLogin() {
         return $this->login;
     }
 
-   	public function setLogin($login) {
+    public function setLogin($login) {
         $this->login = $login;
     }
 
@@ -82,7 +82,7 @@ class User {
     }
 
     public function getPhone() {
-	   return $this->phone;
+        return $this->phone;
     }
 
     public function setPhone($phone) {
@@ -91,7 +91,7 @@ class User {
    	
     public function getAdmin() {
 	   return $this->admin;
-   	}
+    }
 
     public function setAdmin($admin) {
         $this->admin = $admin;
