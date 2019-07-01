@@ -11,7 +11,7 @@ class Stock {
 	private $company;
 
 
-	public function __construct($minimium, $maximum, $opening, $value, $close_value, $company){
+	public function __construct($minimium, $maximum, $opening, $value, $close_value, $company) {
 		$this->minimium = $minimium;
 		$this->maximum = $maximum;
 		$this->opening = $opening;
@@ -19,45 +19,46 @@ class Stock {
 		$this->close_value = $close_value;
 		$this->company = $company;
 	}
-	public function getMinimium(){
+	
+	public function getMinimium() {
 		return $this->minimium;
-   	}
-   	public function setMinimium($minimium){
-       	$this->minimium = $minimium;
+	}
+	public function setMinimium($minimium) {
+		$this->minimium = $minimium;
 	}
 
-	public function getMaximum(){
+	public function getMaximum() {
 		return $this->maximum;
-   	}
-   	public function setMaximum($maximum){
-       	$this->maximum = $maximum;
+	}
+	public function setMaximum($maximum) {
+		$this->maximum = $maximum;
 	}
 
-	public function getOpening(){
+	public function getOpening() {
 		return $this->opening;
-   	}
-   	public function setOpening($opening){
-       	$this->opening = $opening;
+	}
+	public function setOpening($opening) {
+		$this->opening = $opening;
 	}
 
-	public function getValue(){
+	public function getValue() {
 		return $this->value;
-   	}
-   	public function setValue($value){
-       	$this->value = $value;
+	}
+	public function setValue($value) {
+		$this->value = $value;
 	}
 
-	public function getClose_value(){
+	public function getClose_value() {
 		return $this->close_value;
-   	}
-   	public function setClose_value($close_value){
-       	$this->close_value = $close_value;
+	}
+	public function setClose_value($close_value) {
+		$this->close_value = $close_value;
 	}
 
-	public function getCompany(){
+	public function getCompany() {
 		return $this->company;
-   	}
-   	public function setCompany($company){
-       	$this->company = $company;
+	}
+	public function setCompany($company) {
+		$this->company = $company;
 	}
 }
