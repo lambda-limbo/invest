@@ -32,7 +32,7 @@ class User {
 
     public function setName($name) {
         $this->name = $name;
-   	}
+    }
 
     public function getWallet() {
         return $this->wallet;
@@ -40,32 +40,33 @@ class User {
 
     public function setWallet($wallet) {
         $this->wallet = $wallet;
-   	}
+    }
 
     public function getPassword() {
         return $this->password;
-   	}
+    }
     public function setPassword($password) {
         $this->password = $password;
-   	}
+    }
 
    	public function getLogin() {
         return $this->login;
-   	}
+    }
 
    	public function setLogin($login) {
         $this->login = $login;
+    }
 
-   	public function getCPF() {
+    public function getCPF() {
         return $this->cpf;
-   	}
-    
-   	public function setCPF($cpf) {
+    }
+
+    public function setCPF($cpf) {
         $this->cpf = $cpf;
     }
 
     public function getEmail() {
-	   return $this->email;
+        return $this->email;
     }
 
     public function setEmail($email) {
@@ -73,8 +74,8 @@ class User {
     }
 
     public function getDate_birth() {
-	   return $this->email;
-   	}
+        return $this->email;
+    }
 
     public function setDate_birth($date) {
         $this->date_birth = $date;
