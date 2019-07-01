@@ -16,5 +16,15 @@
             }
 
             
+
+            $valid_username = 1;
+            $valid_password = 1;//password_verify($password, );
+
+            if ($valid_username && $valid_password) {
+                Session::create("USER", array('username' => $user));
+                return true;
+            }
+
+            return false;
         }
     }
