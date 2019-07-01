@@ -83,7 +83,6 @@
     });
 
     $router->post('/contact', function() use($twig) {
-        // It's ideal that the messages are sent over the websockets endpoint.
     });
 
 
@@ -112,6 +111,12 @@
 
         $router->get('/stocks', function() use($twig) {
             echo $twig->render('stocks.twig');
+        });
+
+        $router->get('/stocks/(\d+)', function () use($twig) {
+            // Returns a page containing the selected stock and information about
+            // how many stocks the user has acquired and also the fields for buying 
+            // and selling the stock.
         });
 
         
