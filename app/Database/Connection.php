@@ -7,21 +7,21 @@
         private $settings;
         private static $connection;
 
-        public function __construct() {
-            $settings = parse_ini_file("config.ini");
-        }
+        private function __construct() {}
 
         /**
-         * @brief This function gets a new connection with the database 
-         * @returns A connection with the database.
+         * This function gets a new connection with the database. 
+         * @return A connection with the database.
          */
         public function get() {
             if (!isset($connection)) {
-                $host = $settings["host"];
-                $port = $settings["port"];
-                $user = $settings["username"];
-                $pass = $settings["password"];
-                $database = $settings["database"];
+                $this->settings = parse_ini_file("config.ini");
+
+                $host = $this->settings["host"];
+                $port = $this->settings["port"];
+                $user = $this->settings["username"];
+                $pass = $this->settings["password"];
+                $database = $this->settings["database"];
                 
                 try {
                     self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$database", $user, $pass, array(
@@ -32,12 +32,12 @@
                 }
             }
 
-            return $connection;
+            return self::$connection;
         }
 
         public function close() {
             if (!isset($connection)) {
-                $connection->close();
+                $this->connection->close();
             }
         }
     }
