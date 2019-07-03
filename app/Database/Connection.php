@@ -38,7 +38,11 @@
             return self::$connection;
         }
 
+<<<<<<< HEAD
         public function close() {
+=======
+        public static function close() {
+>>>>>>> rafael
             if (!isset(self::$connection)) {
                 self::$connection->close();
             }
