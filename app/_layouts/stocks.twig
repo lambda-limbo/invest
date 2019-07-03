@@ -1,38 +1,110 @@
 {% extends "default_internal.twig" %}
 
 {% block content %}
+
     <div class="container">
         <div class="row align-items-start">
-            <div class="col">
+           <div class="col">
                 <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="../assets/img/ativos/petrobras.jpg">
                     <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
+                        <h5 class="card-title">Petroleo Brasileiro SA Petrobras Preference Shares</h5>
+                        <p class="card-text">BVMF: PETR4</p>
+                        <div class="card-body ">
+                            <p class="card-title text-center">Valor de compra R$26.86</p>
+                        </div>
+                        <a class="btn btn-outline-secondary" href="#" data-toggle="modal" data-target="#ModalLongoExemplo">Comprar</a>
+                        
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="../assets/img/ativos/petrobras.jpg">
                     <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
+                        <h5 class="card-title">Petroleo Brasileiro SA Petrobras Preference Shares</h5>
+                        <p class="card-text">BVMF: PETR4</p>
+                        <div class="card-body ">
+                            <p class="card-title text-center">Valor de compra R$26.86</p>
+                        </div>
+                        <a class="btn btn-outline-secondary" href="#" data-toggle="modal" data-target="#ModalLongoExemplo">Comprar</a>
+                        
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+                    <img alt="Imagem de capa do card" class="card-img-top" src="../assets/img/ativos/petrobras.jpg">
                     <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
+                        <h5 class="card-title">Petroleo Brasileiro SA Petrobras Preference Shares</h5>
+                        <p class="card-text">BVMF: PETR4</p>
+                        <div class="card-body ">
+                            <p class="card-title text-center">Valor de compra R$26.86</p>
+                        </div>
+                        <a class="btn btn-outline-secondary" href="#" data-toggle="modal" data-target="#ModalLongoExemplo">Comprar</a>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalLongoExemplo" tabindex="-1" role="dialog" aria-labelledby="TituloModalLongoExemplo" aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TituloModalLongoExemplo">Compra do Ativo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm">
+                    <p>O Fabuloso Gerador de Lero-lero v2.0 é capaz de gerar qualquer 
+                              quantidade de texto vazio e prolixo, ideal para engrossar uma 
+                              tese de mestrado, impressionar seu chefe ou preparar</p>
+                </div>
+                <div class="col-sm">
+                    <form>
+                        <div class="form-group">
+                            <label for="valor-ativo">Valor do Ativo</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                            <span class="input-group-text">R$</span>
+                                    </div>
+                                    <input type="Integer" class="form-control" id="valor-ativo" placeholder="150.65">
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="qdt-dinheiro">Quantidade em reais</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                            <span class="input-group-text">R$</span>
+                                    </div>
+                                    <input type="Integer" class="form-control" id="qdt-dinheiro" placeholder="R$ 1999,99">
+                                </div>
+                        </div>
+                    </form>
+                
+                </div>
+            </div>
+        </div>
+    
+             
+        
+   
+      </div>
+      <div class="modal-footer">  
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-outline-success">Confirmar Compra</button>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
