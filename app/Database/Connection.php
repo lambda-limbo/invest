@@ -1,27 +1,30 @@
 <?php
     namespace Invest\Database;
 
+    use \PDO;
+
     use Invest\Exceptions;
+    
 
     class Connection {
-        private $settings;
+        private static $settings;
         private static $connection;
 
-        public function __construct() {
-            $settings = parse_ini_file("config.ini");
-        }
+        private function __construct() {}
 
         /**
-         * @brief This function gets a new connection with the database 
-         * @returns A connection with the database.
+         * Gets a new connection with the database or throw an exception in case of error. 
+         * @return A connection with the database.
          */
-        public function get() {
+        public static function get() {
             if (!isset($connection)) {
-                $host = $settings["host"];
-                $port = $settings["port"];
-                $user = $settings["username"];
-                $pass = $settings["password"];
-                $database = $settings["database"];
+                self::$settings = parse_ini_file("config.ini");
+
+                $host = self::$settings["host"];
+                $port = self::$settings["port"];
+                $user = self::$settings["username"];
+                $pass = self::$settings["password"];
+                $database = self::$settings["database"];
                 
                 try {
                     self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$database", $user, $pass, array(
@@ -32,12 +35,16 @@
                 }
             }
 
-            return $connection;
+            return self::$connection;
         }
 
+<<<<<<< HEAD
         public function close() {
-            if (!isset($connection)) {
-                $connection->close();
+=======
+        public static function close() {
+>>>>>>> rafael
+            if (!isset(self::$connection)) {
+                self::$connection->close();
             }
         }
     }

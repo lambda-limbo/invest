@@ -2,11 +2,13 @@
 <html lang="pt-br">
     <head>
         <title>Invest</title>
+
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
         <base href="{{ base_url }}">
 
         <link href="assets/img/logo/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
         <link href="assets/css/theme.css" rel="stylesheet">
         <link href="assets/css/all.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -14,17 +16,21 @@
     <body class="">
         <nav class="navbar navbar-expand-md navbar-light">
             <a class="navbar-brand" href=""><img height="50" src="assets/img/logo/mllr.png" width="125"></a>
-            <!-- Toggler Button -->
+       
             <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Navbar links -->
+          
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav ml-auto navbar-nav">
-                    {% for item, url in navigation_internal %}
+                    {% for item, value in navigation_internal %}
+                        {% if item == "sair" %}
                         <li class="nav-item">
-                            <a href="{{ base_url }}internal{{ url }}" class="nav-link">{{ item }}</a>
+                            <a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-outline-dark ml-2">{{ item }} <i class="{{ value['icon']}}"></i> </a>
                         </li>
+                        {% else %}
+                        <li class="nav-item"><a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-light mr-2"><i class="{{ value['icon']}}"></i> {{ item }}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </div>

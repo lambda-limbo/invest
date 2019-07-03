@@ -4,87 +4,66 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
-                {# <button class="btn btn-outline-secondary" type="button">CARTEIRA</button>
-                                                                                <button class="btn btn-outline-secondary" type="button">ATIVOS</button>
-                                                                                <button class="btn btn-outline-secondary" type="button">PORTIFOLIO</button>
-                                                                                <button class="btn btn-outline-secondary" type="button">DEPOSITO</button>
-                                                                                <button class="btn btn-outline-secondary" type="button">RELATÓRIO</button> #}
-            
-                    <div class="col justify-content-center">
-                        <button class="btn btn-outline-secondary" type="button">CARTEIRA</button>
-                        <button class="btn btn-outline-secondary" type="button">ATIVOS</button>
-                        <button class="btn btn-outline-secondary" type="button">PORTIFOLIO</button>
-                        <button class="btn btn-outline-secondary" type="button">DEPOSITO</button>
-                        <button class="btn btn-outline-secondary" type="button">RELATÓRIO</button>
+                <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-                    </div>
+{% block scripts %}
+    <script>
+        var data = [
+            {
+                values: [
+                    30, 70
+                ],
+                labels: [
+                    'Valor em Carteira', 'Valor em Ativos'
+                ],
+                domain: {
+                    column: 0
+                },
+                name: 'Carteira',
+                hoverinfo: 'label+percent+name',
+                hole: .7,
+                type: 'pie'
+            }, {
+                values: [
+                    50, 10, 5, 5, 30
+                ],
+                labels: [
+                    'Petrobas', 'Uber', 'Google', 'Facebook', 'Spotify'
+                ],
+                domain: {
+                    column: 1
+                },
+                name: '',
+                hoverinfo: 'label+percent+name',
+                hole: .7,
+                type: 'pie'
+            }
+        ];
 
-            {% endblock %}
+        var layout = {
+            title: '',
+            grid: {
+                rows: 1,
+                columns: 2
+            },
+            showlegend: false,
+            annotations: [
+                {
+                    font: {
+                        size: 14
+                    },
+                    showarrow: false,
+                    text: 'CARTEIRA',
+                    x: 0.,
+                    y: 0.5
+                }
+            ]
+        };
 
-            {% block scripts %}
-                <script>
-
-                    var data = [
-                        {
-                            values: [
-                                30, 70
-                            ],
-                            labels: [
-                                'Valor em Carteira', 'Valor em Ativos'
-                            ],
-                            domain: {
-                                column: 0
-                            },
-                            name: 'Carteira',
-                            hoverinfo: 'label+percent+name',
-                            hole: .7,
-                            type: 'pie'
-                        }, {
-                            values: [
-                                50, 10, 5, 5, 30
-                            ],
-                            labels: [
-                                'Petrobas', 'Uber', 'Google', 'Facebook', 'Spotify'
-                            ],
-                            domain: {
-                                column: 1
-                            },
-                            name: 'Ativos',
-                            hoverinfo: 'label+percent+name',
-                            hole: .7,
-                            type: 'pie'
-                        }
-                    ];
-
-                    var layout = {
-                        title: 'Minha Carteira',
-                        grid: {
-                            rows: 1,
-                            columns: 2
-                        },
-                        showlegend: false,
-                        annotations: [
-                            {
-                                font: {
-                                    size: 14
-                                },
-                                showarrow: false,
-                                text: 'CARTEIRA',
-                                x: 0.,
-                                y: 0.5
-                            }, {
-                                font: {
-                                    size: 14
-                                },
-                                showarrow: false,
-                                text: 'ATIVOS',
-                                x: 0.8,
-                                y: 0.5
-                            }
-                        ]
-                    };
-
-                    Plotly.newPlot('myDiv', data, layout, {showSendToCloud: true});
-                </script>
-            {% endblock %}
+        Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
+    </script>
+{% endblock %}
