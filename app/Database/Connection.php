@@ -1,10 +1,13 @@
 <?php
     namespace Invest\Database;
 
+    use \PDO;
+
     use Invest\Exceptions;
+    
 
     class Connection {
-        private $settings;
+        private static $settings;
         private static $connection;
 
         private function __construct() {}
