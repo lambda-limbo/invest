@@ -3,6 +3,8 @@
 let follow = document.getElementById('next');
 let back = document.getElementById('back');
 
+let confirm = document.getElementById('tos-confirm');
+
 follow.addEventListener('click', (e) => {
     e.preventDefault();
 
@@ -21,4 +23,8 @@ back.addEventListener('click', (e) => {
 
     first.style.display = 'block';
     second.style.display = 'none';
+});
+
+confirm.addEventListener('click', (e) => {
+    document.getElementById('tos').checked = true;
 });
