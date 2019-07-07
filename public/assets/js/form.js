@@ -8,21 +8,16 @@ let confirm = document.getElementById('tos-confirm');
 follow.addEventListener('click', (e) => {
     e.preventDefault();
 
-    let first = document.getElementById('first');
-    let second = document.getElementById('second');
-
-    first.style.display = 'none';
-    second.style.display = 'block';
+    $('#first').fadeOut("fast", function() {
+        $('#second').fadeIn("fast");
+    });
 })
 
 back.addEventListener('click', (e) => {
     e.preventDefault();
-    
-    let first = document.getElementById('first');
-    let second = document.getElementById('second');
 
-    first.style.display = 'block';
-    second.style.display = 'none';
+    $('#second').fadeOut("fast");
+    $('#first').fadeIn("fast");
 });
 
 confirm.addEventListener('click', (e) => {
