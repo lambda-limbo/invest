@@ -2,9 +2,13 @@
 
     namespace Invest;
 
+    use \PDO;
+
     use Invest\Middleware\Authentication;
     use Invest\Middleware\Redirection;
     use Invest\Middleware\Session;
+
+    use Invest\Database\Connection;
 
     // Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
@@ -88,13 +92,13 @@
 
     // Middleware to check if the user has been logged in. For some reason I 
     // two of them because the reges (internal/.*)|(internal/) doesn't work.
-    $router->before('GET|POST',  'internal/.*', function() use ($twig) {
+    $router->before('GET|POST', 'internal/.*', function() use ($twig) {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
     });
 
-    $router->before('GET|POST',  'internal/', function() use ($twig) {
+    $router->before('GET|POST', 'internal/', function() use ($twig) {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
@@ -102,7 +106,8 @@
 
     $router->mount('/internal', function() use ($router, $twig) {
         $router->get('/', function() use ($twig) {
-            echo $twig->render('dashboard.twig');
+            echo $twig->render('dashboard.twig', array('USERNAME' => $_SESSION['USER']['username'],
+                                                       'DATA' => array('f' => 30, 's' => 70)));                               
         });
 
         $router->get('/wallet', function() use($twig) {
@@ -111,6 +116,28 @@
 
         $router->get('/stocks', function() use($twig) {
             echo $twig->render('stocks.twig');
+        });
+
+         $router->get('/users', function() use($twig) {
+            $connection = Connection::get();
+
+            $query = "CALL P_SELECT_USER";
+            $statement = $connection->query($query);
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            echo $twig->render('user.twig', array('users' => $result));
+            Connection::close();
+        });
+
+         $router->get('/company', function() use($twig) {
+            $connection = Connection::get();
+
+            $query = "CALL P_SELECT_COMPANIES";
+            $statement = $connection->query($query);
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            echo $twig->render('company.twig', array('companies' => $result));
+            Connection::close();
         });
 
         $router->get('/stocks/(\d+)', function () use($twig) {
