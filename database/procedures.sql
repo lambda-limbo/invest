@@ -123,10 +123,10 @@ END
 
 
 --
--- @brief tabela página usuário
+-- @brief Selects the fields primary key, name, email and administrador value from the user database.
 --
 DELIMITER //
-CREATE  PROCEDURE P_SELECT_USERS ()
+CREATE PROCEDURE P_SELECT_USERS()
 BEGIN
   SELECT USER_PK, USER_NAME, USER_EMAIL, USER_ADM FROM TB_USER;
 END
@@ -144,10 +144,10 @@ END
 //
 
 --
--- @brief all users columns
+-- @brief Selects all users in the database 
 --
 DELIMITER //
-CREATE  PROCEDURE P_SELECT_USER_ALL ()
+CREATE  PROCEDURE P_SELECT_USER_ALL()
 BEGIN
   SELECT * FROM TB_USER;
 END
@@ -156,10 +156,10 @@ END
 
 
 --
--- @brief select all company
+-- @brief Selects every company in the database.
 --
 DELIMITER //
-CREATE  PROCEDURE P_SELECT_COMPANIES ()
+CREATE  PROCEDURE P_SELECT_COMPANIES()
 BEGIN
   SELECT * FROM TB_COMPANY;
 END
