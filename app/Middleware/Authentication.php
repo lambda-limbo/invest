@@ -20,20 +20,17 @@
 
                 $param1 = $_POST["username"];
                 $param2 = $_POST["password"];
-
-                //echo $param1;
-                //echo "----------------"; 
-                //echo $param2;
-                //echo "-------------";
-                $query = "CALL P_VERIFY_LOGIN('$param1', $param2)";
-                //echo $query;
-
+                $query = "CALL P_VERIFY_LOGIN('$param1', '$param2')";
                 $statement = $connection->query($query);
-                $result = $statement->fetchColumn();
-               
+                $result = $statement->rowCount();
+                $reg = $statement->fetch(PDO::FETCH_ASSOC);
+                $username = $reg['USER_LOGIN'];
+                $wallet = $reg['USER_WALLET'];
+                print $_SESSION['USER']['username'];
+                print $_SESSION['USER']['wallet'];
                 if ($result == 1){
-                    Session::create("USER", array('username' => $user));
-                    return true;
+                    Session::create("USER", array('username' => $username, 'wallet' => $wallet ));
+                 return true;
                 }
                 Connection::close();
 
