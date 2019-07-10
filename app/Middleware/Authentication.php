@@ -18,16 +18,16 @@
 
                 $connection = Connection::get();
 
-                $param1 = $_POST["username"];
-                $param2 = $_POST["password"];
-                $query = "CALL P_VERIFY_LOGIN('$param1', '$param2')";
+                $userlogin = $_POST["username"];
+                $userpass = $_POST["password"];
+                $query = "CALL P_VERIFY_LOGIN('$userlogin', '$userpass')";
                 $statement = $connection->query($query);
                 $result = $statement->rowCount();
                 $reg = $statement->fetch(PDO::FETCH_ASSOC);
                 $username = $reg['USER_LOGIN'];
                 $wallet = $reg['USER_WALLET'];
-                print $_SESSION['USER']['username'];
-                print $_SESSION['USER']['wallet'];
+                //print $_SESSION['USER']['username'];
+                //print $_SESSION['USER']['wallet'];
                 if ($result == 1){
                     Session::create("USER", array('username' => $username, 'wallet' => $wallet ));
                  return true;
