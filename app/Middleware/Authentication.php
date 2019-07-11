@@ -26,10 +26,9 @@
                 $reg = $statement->fetch(PDO::FETCH_ASSOC);
                 $username = $reg['USER_LOGIN'];
                 $wallet = $reg['USER_WALLET'];
-                //print $_SESSION['USER']['username'];
-                //print $_SESSION['USER']['wallet'];
+                $code = $reg['USER_PK'];
                 if ($result == 1){
-                    Session::create("USER", array('username' => $username, 'wallet' => $wallet ));
+                    Session::create("USER", array('username' => $username, 'wallet' => $wallet, 'code' => $code ));
                  return true;
                 }
                 Connection::close();
