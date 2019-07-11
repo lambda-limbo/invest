@@ -12,43 +12,30 @@
                 <div class="col text-center">
                     <h1>Histórico de Compras dos Ativos</h1>
                 </div>
+                <div style="overflow: auto; height:200px">
                 <table class="table table-striped">
                     <thead>
-                        <tr>
-                            <th scope="col">#</th>
+                        <tr class = "text-center">
                             <th scope="col">Data</th>
                             <th scope="col">Ativo</th>
                             <th scope="col">R$</th>
-
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>19/04/2019</td>
-                            <td>Vale</td>
-                            <td>1000</td>
+                       <tr>
+                            {% for k, v in report %}
+                                <tr class = "text-center">
+                                    <td>{{ v.DATA }}</td>
+                                    <td>{{ v.NOME }}</td>
+                                    <td>{{ v.VALOR }}</td>
+                                    </tr>
+                                {% endfor %}
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>25/04/2019</td>
-                            <td>Uber</td>
-                            <td>2.500</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>01/05/2019</td>
-                            <td>Spotify</td>
-                            <td>750.00</td>
-                        </tr>
-                        <tr>
-                            <th scope="row"></th>
-                            <td>24/06/2019</td>
-                            <td>Instagran</td>
-                            <td>3.590</td>
-                        </tr>
+                            
+                        
                     </tbody>
                 </table>
+            </div>
             </div>
 
         </div>
