@@ -107,6 +107,8 @@
     $router->mount('/internal', function() use ($router, $twig) {
         $router->get('/', function() use ($twig) {
             echo $twig->render('dashboard.twig', array('USERNAME' => $_SESSION['USER']['username'],
+                                                        'WALLET' => $_SESSION['USER']['wallet'],
+                                                        'CODE' => $_SESSION['USER']['code'],
                                                        'DATA' => array('f' => 30, 's' => 70)));                               
         });
 
@@ -148,7 +150,15 @@
 
         
         $router->get('/reports', function() use($twig) {
-            echo $twig->render('reports.twig');
+            $connection = Connection::get();
+            $codigo = $_SESSION['USER']['code'];
+            $query = "CALL P_REPORT($codigo)";
+            $statement = $connection->query($query);
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            //echo $result[0]['DATA'];
+            print_r($result);
+            echo $twig->render('reports.twig', array('report' => $result));
+            Connection::close();
         });
 
         
