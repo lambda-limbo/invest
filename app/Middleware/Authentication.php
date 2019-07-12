@@ -22,14 +22,18 @@ final class Authentication {
             $connection = Connection::get();
 
             $login = $_POST["username"];
-            $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-
-            $q = new Query("CALL P_VERIFY_LOGIN(:USER, :PASS)");
-            $q->execute(array(':USER' => $login, ':PASS' => $password));
+            $password = $_POST["password"];
+            
+            $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN=:USER");
+            $q->execute(array(':USER' => $login));
             
             $result = $q->fetch();
             if (count($result) === 0) { 
                 return false; 
+            }
+
+            if (!password_verify($password, $result['USER_PASSWORD'])) {
+                return false;
             }
 
             $username = $result['USER_LOGIN'];
@@ -40,6 +44,7 @@ final class Authentication {
                 Session::create("USER", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'adm' => 0));
             } else if ($result['USER_ADM'] == 1 ) {
                 Session::create("ADMIN", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'adm' => 1));
+
             }
 
             return true;
