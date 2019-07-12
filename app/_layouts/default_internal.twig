@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="collapsible-navbar">
                 <ul class="navbar-nav ml-auto navbar-nav">
                     {% for item, value in navigation_internal %}
-                        {% if item == "sair" %}
+                        {% if item == "logout" %}
                         <li class="nav-item">
                             <a href="{{ base_url }}internal{{ value['url'] }}" class="btn btn-outline-dark ml-2">{{ item }} <i class="{{ value['icon']}}"></i> </a>
                         </li>
