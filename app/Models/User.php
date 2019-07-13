@@ -4,7 +4,7 @@ namespace Invest\Models;
 
 use Invest\Database\Query;
 
-class User extends Entity {
+class User implements Entity {
     private $pk;
     public $name;
     public $wallet;
@@ -29,7 +29,7 @@ class User extends Entity {
         $this->admin = $admin;
     }
     
-    public function get() : bool {
+    public function get(string $pk) : bool {
         $q = new Query('SELECT * FROM TB_USER WHERE USER_LOGIN = :LOGIN');
         $r = $q->execute(array(':LOGIN' => $this->login));
 
@@ -99,22 +99,28 @@ class User extends Entity {
     public function delete() : bool {
         $r = 0;
 
-        if (isset($this->pk)) { 
-            $q = new Query('DELETE FROM TABLE TB_USER WHERE USER_PK = :PK');
-            $r = $q->execute(array('PK' => $this->pk));
+        if (!isset($this->pk)) { 
+            $q = new Query('SELECT USER_PK FROM TB_USER WHERE USER_LOGIN = :LOGIN');
+            $q->execute(array(':LOGIN' => $this->login));
+            $data = $q->fetch();
+            var_dump($data);
+            $this->pk = $data['USER_PK'];
+        }
+        
+        $q = new Query('DELETE FROM TABLE TB_USER WHERE USER_PK = :PK');
+        $r = $q->execute(array('PK' => $this->pk));
 
-            if ($r) {
-                $this->pk = "";
-                $this->login = "";
-                $this->password = "";
-                $this->name = "";
-                $this->cpf = "";
-                $this->email = "";
-                $this->birth = "";
-                $this->phone = "";
-                $this->wallet = "";
-                $this->admin = "";
-            }
+        if ($r) {
+            $this->pk = "";
+            $this->login = "";
+            $this->password = "";
+            $this->name = "";
+            $this->cpf = "";
+            $this->email = "";
+            $this->birth = "";
+            $this->phone = "";
+            $this->wallet = "";
+            $this->admin = "";
         }
 
         return $r;
