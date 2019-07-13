@@ -6,3 +6,8 @@ textarea.form-control {
 .form-control:focus {
     /* */
 }
+
+a:hover {
+    color: #0056b3;
+    text-decoration: none;
+  }
