@@ -26,3 +26,7 @@ footer {
 .bg-darker {
     background: rgb(30, 30, 30);
 }
+
+.img-inverter {
+    filter: invert(100%)
+}
