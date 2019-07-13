@@ -6,6 +6,7 @@ use Invest\Database\Connection;
 use Invest\Exceptions\DatabaseException;
 
 use \PDO;
+use \PDOException;
 
 class Query {
     private $query;
@@ -38,11 +39,15 @@ class Query {
      * 
      */
     public function execute($parameters = array()) : bool {
-        if (!empty($parameters)) {
-            return $this->stmt->execute($parameters);
+        try {
+            if (!empty($parameters)) {
+                return $this->stmt->execute($parameters);
+            }
+            
+            return $this->stmt->execute();
+        } catch (PDOException $e) {
+            throw new DatabaseException("Error executing the query $this->query");
         }
-        
-        return $this->stmt->execute();
     }
 
     /**

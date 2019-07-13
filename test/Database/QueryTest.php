@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-use Invest\Database\Connection;
 use Invest\Database\Query;
 use PHPUnit\Framework\TestCase;
+use Invest\Exceptions\DatabaseException;
 
 final class QueryTest extends TestCase {
     
     /**
-     * 
+     * Test an insertion on the database
      */
     public function testInsert() {
         $q = new Query('CALL P_INSERT_USER("Rafael Campos Nunes", "ranu", "some password", "02086936290", "rcamposnunes@outlook.com", "45999211031", "1996-07-15", "100.00")');
@@ -16,7 +16,7 @@ final class QueryTest extends TestCase {
     }
 
     /**
-     * 
+     * Test a select on the database
      */
     public function testSelect() {
         $q = new Query('SELECT * FROM TB_USER');
@@ -37,6 +37,16 @@ final class QueryTest extends TestCase {
 
         while ($row = $q->fetch()) {
             print_r($row);
+        }
+    }
+
+    public function testException() {
+        $q = new Query('CALL P_SOME_UNDEFINED_PROCEDURE');
+
+        try {
+            $q->execute();
+        } catch (DatabaseException $e) {
+            $this->assertEquals($e->getMessage(), "Error executing the query CALL P_SOME_UNDEFINED_PROCEDURE");
         }
     }
 }
