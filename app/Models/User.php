@@ -103,11 +103,11 @@ class User implements Entity {
             $q = new Query('SELECT USER_PK FROM TB_USER WHERE USER_LOGIN = :LOGIN');
             $q->execute(array(':LOGIN' => $this->login));
             $data = $q->fetch();
-            var_dump($data);
+
             $this->pk = $data['USER_PK'];
         }
         
-        $q = new Query('DELETE FROM TABLE TB_USER WHERE USER_PK = :PK');
+        $q = new Query('DELETE FROM TB_USER WHERE USER_PK = :PK');
         $r = $q->execute(array('PK' => $this->pk));
 
         if ($r) {
