@@ -2,7 +2,6 @@
 
 namespace Invest\Models;
 
-use Invest\Database\Connection;
 use Invest\Database\Query;
 
 class Company implements Entity {
