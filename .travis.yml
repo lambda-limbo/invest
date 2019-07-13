@@ -3,5 +3,16 @@ language: php
 php:
   - '7.3'
 
-before_script: composer install 
-script: phpunit --bootstrap ./vendor/autoload.php --testdox test/
+services:
+  mysql
+
+before_script: 
+  - composer install 
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('pass123') where user='root'; update user set plugin='mysql_native_password'; FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -ppass123
+  - sudo service mysql restart
+  - sudo mysql -u root -ppass123 < database/database.sql
+  - sudo mysql -u root -ppass123 < database/procedures.sql
+
+script: 
+  - phpunit --bootstrap ./vendor/autoload.php --testdox test/
