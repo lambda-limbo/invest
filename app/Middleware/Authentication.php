@@ -39,11 +39,13 @@ final class Authentication {
             $username = $result['USER_LOGIN'];
             $wallet = $result['USER_WALLET'];
             $code = $result['USER_PK'];
+            $name = $result['USER_NAME'];
 
             if ($result['USER_ADM'] == 0) {
-                Session::create("USER", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'adm' => 0));
+                Session::create("USER", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'name' => $name, 'adm' => 0));
             } else if ($result['USER_ADM'] == 1 ) {
-                Session::create("ADMIN", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'adm' => 1));
+                Session::create("ADMIN", array('username' => $username, 'wallet' => $wallet, 'code' => $code,'name' =>$name,
+                    'adm' => 1));
 
             }
 
