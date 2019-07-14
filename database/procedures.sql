@@ -1,6 +1,7 @@
 --
 -- Procedures file
 -- 
+USE `INVEST_DATABASE`;
 
 
 --
