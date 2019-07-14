@@ -7,6 +7,8 @@
     use Invest\Middleware\Authentication;
     use Invest\Middleware\Redirection;
     use Invest\Middleware\Session;
+    use Invest\Database\Query;
+
 
     use Invest\Database\Connection;
 
@@ -52,7 +54,7 @@
         $auth = Authentication::authenticate($_POST["username"], $_POST["password"]);
 
         if (strlen($username_css) == 0 && strlen($password_css) == 0 && !$auth) {
-            $error_message = 'Usuário ou senha incorretos.';
+                $error_message = 'Usuário ou senha incorretos.';
         }
 
         if ($auth) {
@@ -75,6 +77,24 @@
     });
 
     $router->post('/sign_up', function() use($twig) {
+
+        
+            $connection = Connection::get();
+            $name = $_POST["name"];
+            $username = $_POST["username"];
+            $password = $_POST["password"];
+            $cpf = $_POST["cpf"];
+            $email = $_POST["email"];
+            $phone = $_POST["phone"];
+            $birth = $_POST["birth"];
+            $wallet = 0;
+
+            $query = "CALL P_INSERT_USER ('$name', '$username', '$password', '$cpf', '$email', '$phone', '$birth', $wallet)";
+            $statement = $connection->query($query);
+
+
+            echo "Incluido";
+
         
     });
 
@@ -88,6 +108,51 @@
 
     $router->post('/contact', function() use($twig) {
     });
+
+    $router->post('/money', function() use($twig) {
+            
+                $connection = Connection::get();
+                $wallet = $_POST["user_wallet"];
+                $login = $_SESSION['USER']["username"];
+                $password = $_POST["user_pass"];
+
+                $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN=:USER");
+                $q->execute(array(':USER' => $login));
+
+                $result = $q->fetch();
+                if (count($result) === 0) { 
+                    echo '<script> alert ("Usuário incorreto"); location.href=("/internal")</script>';
+                }
+
+                if (!password_verify($password, $result['USER_PASSWORD'])) {
+                    echo '<script> alert ("Senha incorreta"); location.href=("/internal")</script>';
+                    echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
+                                                        'wallet' => $_SESSION['USER']['wallet'],
+                                                        'code' => $_SESSION['USER']['code'],
+                                                        'name' => $_SESSION['USER']['name'],
+                                                       'data' => array('f' => 30, 's' => 70)));
+                    
+                }
+
+                else {
+
+                $code = $_SESSION['USER']['code'];
+                $nova_wallet = $_SESSION['USER']['wallet'] + $wallet;
+                $q2 = new Query("CALL P_UPDATE_WALLET(:CODIGO, :WALLET)");
+                $q2->execute(array(':CODIGO' => $code, ':WALLET' => $nova_wallet));
+                $_SESSION['USER']['wallet'] = $nova_wallet;
+                $result = $q->fetch();
+                echo '<script> alert ("Dinheiro depositado com sucesso"); location.href=("/internal")</script>';
+                echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
+                                                        'wallet' => $_SESSION['USER']['wallet'],
+                                                        'code' => $_SESSION['USER']['code'],
+                                                        'name' => $_SESSION['USER']['name'],
+                                                       'data' => array('f' => 30, 's' => 70)));
+            
+                }
+            
+        });
+    
 
 
     // Middleware to check if the user has been logged in. For some reason I 
@@ -105,12 +170,19 @@
     });
 
     $router->mount('/internal', function() use ($router, $twig) {
+        
         $router->get('/', function() use ($twig) {
-            echo $twig->render('dashboard.twig', array('USERNAME' => $_SESSION['USER']['username'],
-                                                        'WALLET' => $_SESSION['USER']['wallet'],
-                                                        'CODE' => $_SESSION['USER']['code'],
-                                                       'DATA' => array('f' => 30, 's' => 70)));                               
+            echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
+                                                        'wallet' => $_SESSION['USER']['wallet'],
+                                                        'code' => $_SESSION['USER']['code'],
+                                                        'name' => $_SESSION['USER']['name'],
+                                                       'data' => array('f' => 30, 's' => 70)));                               
         });
+
+        /**
+         *
+         */
+        
 
         $router->get('/wallet', function() use($twig) {
             echo $twig->render('wallet.twig');
@@ -121,14 +193,10 @@
         });
 
          $router->get('/users', function() use($twig) {
-            $connection = Connection::get();
+            $q = new Query("CALL P_SELECT_USERS");
+            $q->execute();
 
-            $query = "CALL P_SELECT_USER";
-            $statement = $connection->query($query);
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            echo $twig->render('user.twig', array('users' => $result));
-            Connection::close();
+            echo $twig->render('user.twig', array('users' => $q->fetchAll()));
         });
 
          $router->get('/company', function() use($twig) {
@@ -142,6 +210,26 @@
             Connection::close();
         });
 
+         $router->post('/company', function() use($twig) {
+                
+                    $connection = Connection::get();
+                    $nome = $_POST["name"];
+                    $info = $_POST["info"];
+                    $symbol = $_POST["symbol"];
+
+                    $query = "CALL P_INSERT_COMPANY('$nome', '$info', '$symbol')";
+                    $statement = $connection->query($query);
+
+                    $query2 = "CALL P_SELECT_COMPANIES";
+                    $statement2 = $connection->query($query2);
+                    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                    echo '<script> alert ("Empresa Adicionada com sucesso!"); location.href=("/internal/company")</script>';
+                    echo $twig->render('company.twig', array('companies' => $result));
+                    
+                    Connection::close();
+        });
+
         $router->get('/stocks/(\d+)', function () use($twig) {
             // Returns a page containing the selected stock and information about
             // how many stocks the user has acquired and also the fields for buying 
@@ -150,15 +238,13 @@
 
         
         $router->get('/reports', function() use($twig) {
-            $connection = Connection::get();
+            
             $codigo = $_SESSION['USER']['code'];
-            $query = "CALL P_REPORT($codigo)";
-            $statement = $connection->query($query);
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-            //echo $result[0]['DATA'];
-            print_r($result);
-            echo $twig->render('reports.twig', array('report' => $result));
-            Connection::close();
+            $q = new Query("CALL P_REPORT($codigo)");
+            $q->execute();
+            echo $twig->render('reports.twig', array('report' => $q->fetchAll()));
+
+            
         });
 
         
