@@ -23,13 +23,16 @@
                     </thead>
                     <tbody>
                        <tr>
+                        {% for reports in report %}
                             {% for k, v in report %}
+                            
                                 <tr class = "text-center">
                                     <td>{{ v.DATA }}</td>
                                     <td>{{ v.NOME }}</td>
                                     <td>{{ v.VALOR }}</td>
                                     </tr>
-                                {% endfor %}
+                            {% endfor %}
+                            {% endfor %}
                         </tr>
                             
                         
