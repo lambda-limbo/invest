@@ -92,8 +92,8 @@
             $query = "CALL P_INSERT_USER ('$name', '$username', '$password', '$cpf', '$email', '$phone', '$birth', $wallet)";
             $statement = $connection->query($query);
 
-
-            echo "Incluido";
+            echo '<script> alert ("Cadastro efetuado com sucesso"); location.href=("/login")</script>';
+            echo $twig->render('login.twig');
 
         
     });
