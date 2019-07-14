@@ -32,10 +32,6 @@ class Stock implements Entity {
 			$this->company = $company;
 		}
 	}
-	
-	public function getMinimium() {
-		return $this->minimium;
-	}
 
 	public function get() : bool {
 		$q = new Query('SELECT * FROM TB_STOCK WHERE TB_COMPANY_COMPANY_PK = :COMPANY');
