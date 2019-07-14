@@ -24,19 +24,20 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
+                    {{ user['USER_LOGIN'] }}
                     <tr class="text-center">
                         {% for k, v in user %}
-                            {% if k == "USER_ADM" %}
-                                {% if v == 0 %}
-                                    <td>Usuário</td>
-                                {% else %}
-                                    <td>Administrador</td> 
-                                {% endif %}
-                            {% else %}
-                                <td>{{ v }}</td>
-                            {% endif %}
+                        {% if k == "USER_ADM" %}
+                        {% if v == 0 %}
+                        <td>Usuário</td>
+                        {% else %}
+                        <td>Administrador</td> 
+                        {% endif %}
+                        {% else %}
+                        <td>{{ v }}</td>
+                        {% endif %}
                         {% endfor %}
-                            <td>
+                        <td>
                             <div class="btn-group">
                                 <button class="btn btn-light" data-toggle="modal" data-target="#modal-edit"><i class="fa fa-edit"></i></button>
                                 <button class="btn btn-light" onclick="confirma()"><i class="fa fa-trash"></i></button>
@@ -61,15 +62,15 @@
 <div class="modal fade"  tabindex="-1"  role="dialog" id="modal-edit">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="overflow: auto; height:500px">
-      <div class="modal-header">
-        <h5 class="modal-title">Editar usuário</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-          <span aria-hidden="true">&times;</span>
-      </button>
-     </div>
+        <div class="modal-header">
+            <h5 class="modal-title">Editar usuário</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
   <div class="modal-body">
     <form method="post" action="" spellcheck="false">
-         <div>
+       <div>
             <div class="form-group">
                 <label for="user_name">Nome completo</label>
                 <input type="text" class="form-control" name="user_name"  value="Recuperar nome banco" required>
@@ -96,13 +97,13 @@
                 <button id="back" class="btn btn-light">VOLTAR</button>
                 <button type="submit" class="btn btn-primary">EDITAR</button>
             </div> 
+        </div>
+    </form> 
+</div>
+</div>
+</div>
+</div>
 
-        </form> 
-    </div>
-</div>
-</div>
-</div>
- 
 <div class="modal fade"  tabindex="-1"  role="dialog" id="modal-user">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="overflow: auto; height:500px">
@@ -133,7 +134,7 @@
             </div>
             <div class="form-group">
                 <label for="phone">Telefone celular</label>
-                <input type="tel" class="form-control" nme="phone" placeholder="(99) 9 9999-9999" title="Coloque as informações de acordo com o padrão mostrado" required>
+                <input type="tel" class="form-control" name="phone" placeholder="(99) 9 9999-9999" title="Coloque as informações de acordo com o padrão mostrado" required>
             </div>
 
             <div class="form-group" >
