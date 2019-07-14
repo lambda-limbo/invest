@@ -9,7 +9,7 @@
     // Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
                     'investimentos' => '/investments', 
-                    'contatos' => '/contact', 
+                    'contato' => '/contact', 
                     'login' => '/login',  
                     'abra sua conta' => '/sign_up');
 
@@ -18,9 +18,14 @@
                       'carteira'=> array('url' => '/wallet', 'icon' => 'fa fa-wallet'),
                       'ativos'=> array('url' => '/stocks', 'icon' => 'fa fa-layer-group'),
                       'relatórios'=> array('url' => '/reports', 'icon' => 'fa fa-file-pdf'),
-                      'sair'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
+                      'logout'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
+
+    $admin = array ('usuários' => array ('url' => '/users', 'icon' => 'fa fa-users'),
+                    'ativos' => array ('url' => '/stocks', 'icon' => 'fa fa-chart-bar'),
+                    'logout' => array ('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
 
     $twig->addGlobal('navigation', $routes);
+    $twig->addGlobal('navigation_admin', $admin);
     $twig->addGlobal('navigation_internal', $internal);
     $twig->addGlobal('base_url', $router->getBasePath());
 
@@ -30,8 +35,10 @@
     });
 
     $router->get('/login', function() use($twig) {
-        if (Session::exists("USER")) {
+        if (Session::exists('USER')) {
             Redirection::to('internal');
+        } else if (Session::exists('ADMIN')) {
+            Redirection::to('admin');
         } else {
             echo $twig->render('login.twig');
         }
@@ -52,7 +59,11 @@
         }
 
         if ($auth) {
-            Redirection::to('internal');
+            if (Session::exists('USER')) {
+                Redirection::to('internal');
+            } else if (Session::exists('ADMIN')) {
+                Redirection::to('admin');
+            }
         } else {
             echo $twig->render('login.twig', array('error' => $error_message,
                                                    'username_css' => $username_css,
@@ -83,18 +94,19 @@
     });
 
     $router->post('/contact', function() use($twig) {
+        
     });
 
 
     // Middleware to check if the user has been logged in. For some reason I 
     // two of them because the reges (internal/.*)|(internal/) doesn't work.
-    $router->before('GET|POST',  'internal/.*', function() use ($twig) {
+    $router->before('GET|POST',  'internal/.*', function() {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
     });
 
-    $router->before('GET|POST',  'internal/', function() use ($twig) {
+    $router->before('GET|POST',  'internal/', function() {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
@@ -113,7 +125,7 @@
             echo $twig->render('stocks.twig');
         });
 
-        $router->get('/stocks/(\d+)', function () use($twig) {
+        $router->get('/stock/(\d+)', function () use($twig) {
             // Returns a page containing the selected stock and information about
             // how many stocks the user has acquired and also the fields for buying 
             // and selling the stock.
@@ -126,6 +138,37 @@
 
         
         $router->get('/exit', function() use($twig) {
+            Session::clear();
+            Redirection::out();
+        });
+    });
+
+    $router->before('GET|POST',  'admin/.*', function() {
+        if (!Session::exists("ADMIN")) {
+            Redirection::out();
+        }
+    });
+
+    $router->before('GET|POST',  'admin/', function() {
+        if (!Session::exists("ADMIN")) {
+            Redirection::out();
+        }
+    });
+
+    $router->mount('/admin', function() use($router, $twig) {
+        $router->get('/', function() use ($twig) {
+            echo $twig->render('admin_dashboard.twig', array(''));
+        });
+
+        $router->get('/users', function() use ($twig) {
+            echo $twig->render('admin_users.twig', array(''));
+        });
+
+        $router->get('/stocks', function() use ($twig) {
+            echo $twig->render('admin_stocks.twig', array(''));
+        });
+
+        $router->get('/exit', function() use ($twig) {
             Session::clear();
             Redirection::out();
         });
