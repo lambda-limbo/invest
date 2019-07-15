@@ -83,6 +83,8 @@
             $name = $_POST["name"];
             $username = $_POST["username"];
             $password = $_POST["password"];
+            $password = hash('whirlpool', $_POST["password"]);
+            $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
             $cpf = $_POST["cpf"];
             $email = $_POST["email"];
             $phone = $_POST["phone"];
@@ -91,7 +93,7 @@
 
             $query = "CALL P_INSERT_USER ('$name', '$username', '$password', '$cpf', '$email', '$phone', '$birth', $wallet)";
             $statement = $connection->query($query);
-
+            echo $query;
             echo '<script> alert ("Cadastro efetuado com sucesso"); location.href=("/login")</script>';
             echo $twig->render('login.twig');
 
