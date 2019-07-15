@@ -133,27 +133,6 @@ END
 //
 
 
---
--- @brief verificação login
---
-DELIMITER //
-CREATE  PROCEDURE P_VERIFY_LOGIN (IN LOGIN VARCHAR(20), IN PASSWORD VARCHAR(255))
-BEGIN
-  SELECT USER_LOGIN, USER_WALLET, USER_PK, USER_ADM FROM TB_USER WHERE USER_LOGIN = LOGIN AND USER_PASSWORD = PASSWORD;
-END
-//
-
---
--- @brief Selects all users in the database 
---
-DELIMITER //
-CREATE  PROCEDURE P_SELECT_USER_ALL()
-BEGIN
-  SELECT * FROM TB_USER;
-END
-//
-
-
 
 --
 -- @brief Selects every company in the database.
@@ -198,11 +177,31 @@ END
 //
 
 --
--- @brief select the 
+-- @brief select the value in wallet
 --
 DELIMITER //
 CREATE  PROCEDURE P_SELECT_USER_WALLET (IN CODIGO INT)
 BEGIN
     SELECT USER_WALLET FROM TB_USER WHERE USER_PK = CODIGO;
+END
+//
+
+--
+-- @brief select the purchase total value
+--
+DELIMITER //
+CREATE  PROCEDURE P_SUM_BUY (IN PK_CODE INT)
+BEGIN
+    SELECT SUM(TRANSACTION_TOTAL) FROM TB_TRANSACTION WHERE USER_PK = PK_CODE AND TRANSACTION_TYPE = 'Compra';
+END
+//
+
+--
+-- @brief select the sale total value 
+--
+DELIMITER //
+CREATE  PROCEDURE P_SUM_SELL (IN PK_CODE INT)
+BEGIN
+    SELECT SUM(TRANSACTION_TOTAL) FROM TB_TRANSACTION WHERE USER_PK = PK_CODE AND TRANSACTION_TYPE = 'Venda';
 END
 //
