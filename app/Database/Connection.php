@@ -31,6 +31,8 @@ class Connection {
                 self::$connection = new PDO("mysql:host=$host;port=$port;dbname=$database", $user, $pass, array(
                     PDO::ATTR_PERSISTENT => true
                 ));
+
+                self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 throw new DatabaseException("Could not connect to the database with the currenct settings. PDOException: $e->getMessage()");
             }

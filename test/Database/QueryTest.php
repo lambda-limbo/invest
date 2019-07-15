@@ -1,25 +1,33 @@
 <?php declare(strict_types=1);
 
-use Invest\Database\Connection;
 use Invest\Database\Query;
 use PHPUnit\Framework\TestCase;
+use Invest\Exceptions\DatabaseException;
 
 final class QueryTest extends TestCase {
     
     /**
-     * 
+     * Test an insertion on the database
      */
     public function testInsert() {
-        $q = new Query('CALL P_INSERT_USER("Rafael Campos Nunes", "ranu", "some password", "02086936290", "rcamposnunes@outlook.com", "45999211031", "1996-07-15", "100.00")');
+        $q = new Query('CALL P_INSERT_USER("Rafael Campos Nunes", "rcamposnunes", "$2y$10$.1g6wdP.72zMxuyL3Y8iGOPAU1/onBmI53tizHPFNa45O4/.enNTG", 
+                       "02086936290", "rcamposnunes@outlook.com", "45999211031", "1996-07-15", "100.00")');
         
         $this->assertEquals($q->execute(), 1);
     }
 
     /**
-     * 
+     * Test a select on the database
      */
     public function testSelect() {
         $q = new Query('SELECT * FROM TB_USER');
+        
+        $this->assertEquals($q->execute(), 1);
+    }
+
+    public function testDelete() {
+        $q = new Query('DELETE t1 FROM TB_USER t1 JOIN TB_USER t2 
+                        ON t1.USER_PK = t2.USER_PK AND t1.USER_LOGIN = "rcamposnunes"');
         
         $this->assertEquals($q->execute(), 1);
     }
@@ -37,6 +45,16 @@ final class QueryTest extends TestCase {
 
         while ($row = $q->fetch()) {
             print_r($row);
+        }
+    }
+
+    public function testException() {
+        $q = new Query('CALL P_SOME_UNDEFINED_PROCEDURE');
+
+        try {
+            $q->execute();
+        } catch (DatabaseException $e) {
+            $this->assertEquals($e->getMessage(), "Error executing the query CALL P_SOME_UNDEFINED_PROCEDURE");
         }
     }
 }
