@@ -36,7 +36,7 @@ class Query {
     }
 
     /**
-     * 
+     * Executes the query
      */
     public function execute($parameters = array()) : bool {
         try {
@@ -46,7 +46,8 @@ class Query {
             
             return $this->stmt->execute();
         } catch (PDOException $e) {
-            throw new DatabaseException("Error executing the query $this->query");
+            $m = $e->getMessage();
+            throw new DatabaseException("Error executing the query $this->query.\n\n\:: $m\n");
         }
     }
 

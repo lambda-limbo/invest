@@ -3,6 +3,8 @@
 namespace Invest\Middleware;
 
 use Invest\Database\Connection;
+use Invest\Database\Query;
+use Invest\Exceptions\DatabaseException;
 
 /**
 * Middleware to authenticate in an user in the system. The only function within
@@ -15,19 +17,43 @@ final class Authentication {
     }
     
     public static function authenticate(string $user, string $password) : bool {
-        if (strlen($user) == 0 || strlen($password) == 0) {
-            return false;
-        }
-        
-        
-        $valid_username = 1;
-        $valid_password = 1;//password_verify($password, );
-        
-        if ($valid_username && $valid_password) {
-            Session::create("USER", array('username' => $user));
+        if (strlen($user) != 0 && strlen($password) != 0) {
+
+            $connection = Connection::get();
+
+            $login = $_POST["username"];
+            $password = $_POST["password"];
+            
+            $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN=:USER");
+            $q->execute(array(':USER' => $login));
+            
+            $result = $q->fetch();
+
+            if (!$result) { 
+                return false; 
+            }
+
+            if (!password_verify($password, $result['USER_PASSWORD'])) {
+                return false;
+            }
+
+            $username = $result['USER_LOGIN'];
+            $wallet = $result['USER_WALLET'];
+            $code = $result['USER_PK'];
+            $name = $result['USER_NAME'];
+
+            if ($result['USER_ADM'] == 0) {
+                Session::create("USER", array('username' => $username, 'wallet' => $wallet, 'code' => $code, 'name' => $name, 'adm' => 0));
+            } else if ($result['USER_ADM'] == 1 ) {
+                Session::create("ADMIN", array('username' => $username, 'wallet' => $wallet, 'code' => $code,'name' =>$name,
+                    'adm' => 1));
+
+            }
+
             return true;
+            
         }
-        
-        return false;
+
+        return false;    
     }
 }

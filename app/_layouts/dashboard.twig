@@ -1,69 +1,104 @@
 {% extends "default_internal.twig" %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col">
-                <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
-            </div>
+<div class="container-fluid">
+    <h1>Bem vindo, {{ username }}</h1>
+    Dinheiro disponível: {{wallet}}
+    <div class="row align-items-center">
+        <div class="col">
+            <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
         </div>
+
     </div>
+    <div class="col-md text-right"> 
+        <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-money">
+          <i class="fa fa-hand-holding-usd"></i> Depositar dinheiro
+      </button>
+  </div>
+</div>
+<div class="modal fade"  tabindex="-1"  role="dialog" id="modal-money">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="overflow: auto; height:500px">
+      <div class="modal-header">
+        <h5 class="modal-title">Déposito</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <form method="post" action="money" spellcheck="false">
+        <div class="form-group">
+            <label for="user_wallet">Valor:</label>
+            <input type="number" class="form-control" name="user_wallet"  placeholder="Digite o valor" required>
+        </div>
+
+        <div class="form-group">
+            <label for="user_pass">Confirmar senha:</label>
+            <input type="password" class="form-control" name="user_pass" placeholder="*******" required>
+        </div>
+        <button type="submit" class="btn btn-primary">DEPOSITAR</button> 
+    </form> 
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
 
+
 {% block scripts %}
-    <script>
-        var data = [
-            {
-                values: [
-                    30, 70
-                ],
-                labels: [
-                    'Valor em Carteira', 'Valor em Ativos'
-                ],
-                domain: {
-                    column: 0
-                },
-                name: 'Carteira',
-                hoverinfo: 'label+percent+name',
-                hole: .7,
-                type: 'pie'
-            }, {
-                values: [
-                    50, 10, 5, 5, 30
-                ],
-                labels: [
-                    'Petrobas', 'Uber', 'Google', 'Facebook', 'Spotify'
-                ],
-                domain: {
-                    column: 1
-                },
-                name: '',
-                hoverinfo: 'label+percent+name',
-                hole: .7,
-                type: 'pie'
-            }
-        ];
+<script>
+var data = [
+{
+    values: [
+    30, 70
+    ],
+    labels: [
+    'Valor em Carteira', 'Valor em Ativos'
+    ],
+    domain: {
+        column: 0
+    },
+    name: 'Carteira',
+    hoverinfo: 'label+percent+name',
+    hole: .7,
+    type: 'pie'
+}, {
+    values: [
+    50, 10, 5, 5, 30
+    ],
+    labels: [
+    'Petrobas', 'Uber', 'Google', 'Facebook', 'Spotify'
+    ],
+    domain: {
+        column: 1
+    },
+    name: '',
+    hoverinfo: 'label+percent+name',
+    hole: .7,
+    type: 'pie'
+}
+];
 
-        var layout = {
-            title: '',
-            grid: {
-                rows: 1,
-                columns: 2
-            },
-            showlegend: false,
-            annotations: [
-                {
-                    font: {
-                        size: 14
-                    },
-                    showarrow: false,
-                    text: 'CARTEIRA',
-                    x: 0.,
-                    y: 0.5
-                }
-            ]
-        };
+var layout = {
+    title: '',
+    grid: {
+        rows: 1,
+        columns: 2
+    },
+    showlegend: false,
+    annotations: [
+    {
+        font: {
+            size: 14
+        },
+        showarrow: false,
+        text: 'CARTEIRA',
+        x: 0.,
+        y: 0.5
+    }
+    ]
+};
 
-        Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
-    </script>
+Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
+</script>
 {% endblock %}

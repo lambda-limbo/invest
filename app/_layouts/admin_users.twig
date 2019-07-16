@@ -1,1 +1,158 @@
-{% extends 'default_admin.twig' %}
+{% extends "default_admin.twig" %}
+
+{% block content %}
+<div class="row align-items-center">
+    <div class="col">
+        <div id="chart"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="col text-center">
+            <h1>Lista de usuários do sistema</h1>
+        </div>
+        <div style="overflow: auto; height:300px">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">Código</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    {{ user['USER_LOGIN'] }}
+                    <tr class="text-center">
+                        {% for k, v in user %}
+                        {% if k == "USER_ADM" %}
+                        {% if v == 0 %}
+                        <td>Usuário</td>
+                        {% else %}
+                        <td>Administrador</td> 
+                        {% endif %}
+                        {% else %}
+                        <td>{{ v }}</td>
+                        {% endif %}
+                        {% endfor %}
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-light" data-toggle="modal" data-target="#modal-edit"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-light" onclick="confirma()"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="col-md text-right"> 
+    <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-user">
+      <i class="fa fa-user-plus"></i> CADASTRAR USUÁRIO
+  </button>
+</div>
+
+
+
+<div class="modal fade"  tabindex="-1"  role="dialog" id="modal-edit">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="overflow: auto; height:500px">
+        <div class="modal-header">
+            <h5 class="modal-title">Editar usuário</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+  <div class="modal-body">
+    <form method="post" action="" spellcheck="false">
+       <div>
+            <div class="form-group">
+                <label for="user_name">Nome completo</label>
+                <input type="text" class="form-control" name="user_name"  value="Recuperar nome banco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="user_email">Email</label>
+                <input type="email" class="form-control" name="user_email"  placeholder="Recuperar email banco" required>
+            </div>
+
+            <div class="form-group">
+                <label for="user_phone">Telefone celular</label>
+                <input type="text" class="form-control" name="user_phone"  placeholder="Recuperar telefone banco" required>
+            </div>
+
+            <div class = "form-group">
+                <select id="USER_ADM">
+                    <option value="0" >Usuário</option>
+                    <option value="1" >Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-group text-right">
+                <button id="back" class="btn btn-light">VOLTAR</button>
+                <button type="submit" class="btn btn-primary">EDITAR</button>
+            </div> 
+        </div>
+    </form> 
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade"  tabindex="-1"  role="dialog" id="modal-user">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="overflow: auto; height:500px">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastro de usuário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+    <form method="post" action="sign_up" spellcheck="false">
+        <div>
+            <div class="form-group">
+                <label for="name">Nome completo</label>
+                <input type="text" class="form-control" name="name"  placeholder="Fulano de Tal" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Endereço de e-mail</label>
+                <input type="email" class="form-control" name="email"  placeholder="fulano@outlook.com" required>
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" class="form-control" name="cpf" placeholder="015.868.265-90" required>
+            </div>
+            <div class="form-group">
+                <label for="birth">Data de nascimento</label>
+                <input type="date" class="form-control" name="birth" placeholder="Digite a sua data de nascimento" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefone celular</label>
+                <input type="tel" class="form-control" name="phone" placeholder="(99) 9 9999-9999" title="Coloque as informações de acordo com o padrão mostrado" required>
+            </div>
+
+            <div class="form-group" >
+                <label for="username">Nome de Usuário</label>
+                <input type="text" class="form-control" name="username"  placeholder="Escolha um nome de usuário bem legal!" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" class="form-control" name="password"  placeholder="De preferência utilize caracteres especiais" required>
+            </div>
+            <div class="form-group text-right">
+                <button id="back" class="btn btn-light">VOLTAR</button>
+                <button type="submit" class="btn btn-primary">CRIAR CONTA</button>
+            </div>
+
+        </form> 
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
