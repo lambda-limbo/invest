@@ -3,7 +3,6 @@
     namespace Invest;
 
     use Invest\Database\Query;
-    use Invest\Database\Connection;
     use Invest\Exceptions\DatabaseException;
 
     use Invest\Middleware\Session;
@@ -87,17 +86,32 @@
 
     $router->post('/sign_up', function() use($twig) {
         
-            $connection = Connection::get();
             $name = $_POST["name"];
             $username = $_POST["username"];
             $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
             $cpf = $_POST["cpf"];
             $email = $_POST["email"];
             $phone = $_POST["phone"];
             $birth = $_POST["birth"];
             $wallet = 0;
-            $query = "CALL P_INSERT_USER ('$name', '$username', '$password', '$cpf', '$email', '$phone', '$birth', $wallet)";
-            $statement = $connection->query($query);
+            
+            $q = new Query("CALL P_INSERT_USER (:NAME, :USERNAME, :PASSWORD, :CPF, :EMAIL, :PHONE, :BIRTH, :WALLET)");
+            $q->execute(array(':NAME' => $name, 
+                              ':USERNAME' => $username, 
+                              ':PASSWORD' => $password, 
+                              ':CPF' => $cpf, 
+                              ':EMAIL' => $email, 
+                              ':PHONE' => $phone, 
+                              ':BIRTH' => $birth, 
+                              ':WALLET' => $wallet));
+
+            try {
+                $q->execute();
+            } catch(DatabaseException $e) {
+
+            }
+            
             echo '<script> alert ("Cadastro efetuado com sucesso"); location.href=("/login")</script>';
             echo $twig->render('login.twig');
     });
@@ -119,33 +133,30 @@
         $login = $_SESSION['USER']["username"];
         $password = $_POST["user_pass"];
 
-        $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN=:USER");
+        $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN = :USER");
         $q->execute(array(':USER' => $login));
         $result = $q->fetch();
-        if (count($result) === 0) { 
-            echo '<script> alert ("Usuário incorreto"); location.href=("/internal")</script>';
-        }
         
         if (!password_verify($password, $result['USER_PASSWORD'])) {
             echo '<script> alert ("Senha incorreta"); location.href=("/internal")</script>';
             echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
-                                                'wallet' => $_SESSION['USER']['wallet'],
-                                                'code' => $_SESSION['USER']['code'],
-                                                'name' => $_SESSION['USER']['name']));
-            
+                                                       'wallet' => $_SESSION['USER']['wallet'],
+                                                       'code' => $_SESSION['USER']['code'],
+                                                       'name' => $_SESSION['USER']['name']));
         } else {
             $code = $_SESSION['USER']['code'];
-            $nova_wallet = $_SESSION['USER']['wallet'] + $wallet;
+            $new_wallet = $_SESSION['USER']['wallet'] + $wallet;
+
             $q2 = new Query("CALL P_UPDATE_WALLET(:CODIGO, :WALLET)");
-            $q2->execute(array(':CODIGO' => $code, ':WALLET' => $nova_wallet));
-            $_SESSION['USER']['wallet'] = $nova_wallet;
+            $q2->execute(array(':CODIGO' => $code, ':WALLET' => $new_wallet));
+
+            $_SESSION['USER']['wallet'] = $new_wallet;
             $result = $q->fetch();
-            echo '<script> alert ("Dinheiro depositado com sucesso"); location.href=("/internal")</script>';
 
             echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
-                                                    'wallet' => $_SESSION['USER']['wallet'],
-                                                    'code' => $_SESSION['USER']['code'],
-                                                    'name' => $_SESSION['USER']['name']));
+                                                       'wallet' => $_SESSION['USER']['wallet'],
+                                                       'code' => $_SESSION['USER']['code'],
+                                                       'name' => $_SESSION['USER']['name']));
         }
             
     });
@@ -172,12 +183,12 @@
             $q1 = new Query("CALL P_SUM_BUY(:CODIGO)");
             $q1->execute(array(':CODIGO' => $codigo));
             
-            $compra =  $q1->fetchAll(PDO::FETCH_ASSOC);
+            $compra =  $q1->fetchAll();
 
             $q2 = new Query("CALL P_SUM_SELL(:CODIGO)");
             $q2->execute(array(':CODIGO' => $codigo));
 
-            $venda = $q2->fetchAll(PDO::FETCH_ASSOC);
+            $venda = $q2->fetchAll();
 
             $valorAplicado = $compra[0]['VALOR'] -  $venda[0]['VALOR'];
             $_SESSION['USER']['aplicado'] = $valorAplicado;
@@ -242,12 +253,11 @@
         });
 
         $router->get('/users', function() use ($twig) {
-            $q = new Query("CALL P_SELECT_USERS");
+            $q = new Query("SELECT USER_PK, USER_NAME, USER_EMAIL, USER_ADM FROM TB_USER;");
 
             try {
                 $q->execute();
-
-                echo $twig->render('user.twig', array('users' => $q->fetchAll()));
+                echo $twig->render('admin_users.twig', array('users' => $q->fetchAll()));
             } catch (DatabaseException $e) {
                 echo $twig->render('admin_users.twig', ServerError::get(500, 'Internal server error', $e));
             }
