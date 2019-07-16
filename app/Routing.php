@@ -18,7 +18,7 @@
                       'relatórios'=> array('url' => '/reports', 'icon' => 'fa fa-file-pdf'),
                       'sair'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
     $admin = array('usuários' => array ('url' => '/users', 'icon' => 'fa fa-users'),
-                    'ativos' => array ('url' => '/company', 'icon' => 'fa fa-chart-bar'),
+                    'ativos' => array ('url' => '/stocks', 'icon' => 'fa fa-chart-bar'),
                     'logout' => array ('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
 
     $twig->addGlobal('navigation', $routes);
@@ -114,8 +114,7 @@
                     echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
                                                         'wallet' => $_SESSION['USER']['wallet'],
                                                         'code' => $_SESSION['USER']['code'],
-                                                        'name' => $_SESSION['USER']['name'],
-                                                       'data' => array('f' => 30, 's' => 70)));
+                                                        'name' => $_SESSION['USER']['name']));
                     
                 }
                 else {
@@ -129,8 +128,7 @@
                 echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
                                                         'wallet' => $_SESSION['USER']['wallet'],
                                                         'code' => $_SESSION['USER']['code'],
-                                                        'name' => $_SESSION['USER']['name'],
-                                                       'data' => array('f' => 30, 's' => 70)));
+                                                        'name' => $_SESSION['USER']['name']));
             
                 }
             
@@ -221,16 +219,11 @@
         $router->get('/users', function() use ($twig) {
             $q = new Query("CALL P_SELECT_USERS");
             $q->execute();
-            echo $twig->render('user.twig', array('users' => $q->fetchAll()));
+
+            echo $twig->render('admin_users.twig', array('users' => $q->fetchAll()));
         });
-        $router->get('/stocks', function() use ($twig) {
-            echo $twig->render('admin_stocks.twig', array(''));
-        });
-        $router->get('/exit', function() use ($twig) {
-            Session::clear();
-            Redirection::out();
-        });
-        $router->post('/company', function() use($twig) {
+
+        $router->post('/stocks', function() use($twig) {
                 
                     $connection = Connection::get();
                     $nome = $_POST["name"];
@@ -241,21 +234,66 @@
                     $query2 = "CALL P_SELECT_COMPANIES";
                     $statement2 = $connection->query($query2);
                     $result = $statement2->fetchAll(PDO::FETCH_ASSOC);   
-                    echo '<script> alert ("Empresa Adicionada com sucesso!"); location.href=("/admin/company")</script>';
-                    echo $twig->render('company.twig', array('companies' => $result));
+                    echo '<script> alert ("Empresa Adicionada com sucesso!"); location.href=("/admin/stocks")</script>';
+                    echo $twig->render('admin_stocks.twig', array('companies' => $result));
                     
                     Connection::close();
         });
 
-        $router->get('/company', function() use($twig) {
+        $router->get('/stocks', function() use($twig) {
             $connection = Connection::get();
             $query = "CALL P_SELECT_COMPANIES";
             $statement = $connection->query($query);
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-            echo $twig->render('company.twig', array('companies' => $result));
+            echo $twig->render('admin_stocks.twig', array('companies' => $result));
             Connection::close();
         });
 
+        $router->get('/users/{number}', function ($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $user = $q->fetch();
+            echo $twig->render('admin_user.twig', array('USER' => $user));
+
+        });
+
+
+        $router->get('/users/{number}', function ($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $user = $q->fetch();
+            echo $twig->render('admin_user.twig', array('USER' => $user));
+
+        });
+
+        $router->post('/users/{number}', function ($number) use($twig) {
+
+            // UPDATE `invest_database`.`TB_USER` SET `USER_NAME` = 'rrrw', `USER_EMAIL` = 'errre', `USER_PHONE` = '1332', `USER_ADM` = '1' WHERE (`USER_PK` = '1');
+            if($_POST['action'] == "EDITAR"){
+                $q = new Query('UPDATE TB_USER SET USER_NAME = :NOME, USER_EMAIL = :EMAIL, USER_PHONE = :PHONE, USER_ADM = :ADM 
+                WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number, ':NOME' => $_POST['user_name'], ':EMAIL'=>$_POST['user_email'],
+                             ':PHONE' =>$_POST['user_phone'], ':ADM' => $_POST['user_adm'],));
+
+            Redirection::to('/localhost/admin/users');
+
+            }
+            
+            else if($_POST['action']=="REMOVER"){
+                // DELETE FROM nome_tabela WHERE condição
+                $q = new Query('DELETE FROM TB_USER WHERE USER_PK = :PK');
+                $q->execute(array(':PK' => $number));
+
+                Redirection::to('/localhost/admin/users');
+            }
+        });
+
+        $router->get('/exit', function() use ($twig) {
+            Session::clear();
+            Redirection::out();
+        });
     });
 
 
