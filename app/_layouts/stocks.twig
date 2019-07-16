@@ -1,38 +1,19 @@
 {% extends "default_internal.twig" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row align-items-start">
-            <div class="col">
-                <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
+        <div class="col-md">
+            {% for company in companies %}
+            <div class="row">
+                <div class="card w-100 mb-3">
                     <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
+                        <h5 class="card-title">{{ company['COMPANY_SYMBOL'] }}</h5>
+                        <p class="card-text">{{ company['COMPANY_INFO'] | length > 50 ? company['COMPANY_INFO'] | slice(0, 50) ~ '...' : company['COMPANY_INFO'] }}</p>
+                        <div class="text-right">
+                            <a class="btn btn-outline-secondary" href="/internal/stocks/{{ company['COMPANY_PK'] }}">Ver mais</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
-                    <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card border-secondary mb-3" style="width: 18rem;">
-                    <img alt="Imagem de capa do card" class="card-img-top" src="assets/img/contato.png">
-                    <div class="card-body text-secondary">
-                        <h5 class="card-title">Título do card</h5>
-                        <p class="card-text">Um exemplo de texto rápido para construir o título do card e fazer preencher o conteúdo do card.</p>
-                        <a class="btn btn-outline-secondary" href="#">Visitar</a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-    </div>
 {% endblock %}

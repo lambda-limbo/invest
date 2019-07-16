@@ -1,0 +1,68 @@
+{% extends "default_internal.twig" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md">
+        <h1>{{ company['COMPANY_NAME'] }}</h1>
+    </div>
+    <div class="col-md text-muted text-right">
+        <h3 class="">{{ company['COMPANY_SYMBOL'] }}</h3>
+    </div>
+</div>
+<p class="">{{ company['COMPANY_INFO'] }}</p>
+
+<div class="" id="company-graph">
+</div>
+
+<ul class="nav nav-pills mb-3" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="pill" href="#pills-buy" role="tab" aria-controls="pills-home" aria-selected="true">COMPRAR</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="pill" href="#pills-sell" role="tab" aria-controls="pills-profile" aria-selected="false">VENDER</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="pills-buy" role="tabpanel" aria-labelledby="pills-buy">
+    <form method="post" action="">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        R$
+                    </div>
+                </div>
+                <input type="number" class="form-control" name="price" placeholder="106,20" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" name="quantity" placeholder="3" required>
+        </div>
+        <div class="form-group text-right">
+            <input type="submit" class="btn btn-success" value="EXECUTAR COMPRA">
+        </div>
+    </form>
+  </div>
+  <div class="tab-pane fade" id="pills-sell" role="tabpanel" aria-labelledby="pills-sell">
+    <form method="post" action="">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        R$
+                    </div>
+                </div>
+                <input type="number" class="form-control" name="price" placeholder="106,20" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" name="quantity" placeholder="5" required>
+        </div>
+        <div class="form-group text-right">
+            <input type="submit" class="btn btn-warning" value="EXECUTAR VENDA">
+        </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

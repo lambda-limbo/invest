@@ -2,6 +2,8 @@
 
     namespace Invest;
 
+    use Invest\Database\Query;
+
     use Invest\Middleware\Authentication;
     use Invest\Middleware\Redirection;
     use Invest\Middleware\Session;
@@ -122,13 +124,22 @@
         });
 
         $router->get('/stocks', function() use($twig) {
-            echo $twig->render('stocks.twig');
+            $q = new Query("SELECT * FROM TB_COMPANY");
+            $q->execute();
+
+            $companies = $q->fetchAll();
+
+            echo $twig->render('stocks.twig', array('companies' => $companies));
         });
 
-        $router->get('/stock/(\d+)', function () use($twig) {
-            // Returns a page containing the selected stock and information about
-            // how many stocks the user has acquired and also the fields for buying 
-            // and selling the stock.
+        $router->get('/stocks/{number}', function ($stock) use($twig) {
+            $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
+            $q->execute(array(':PK' => $stock));
+
+            $company = $q->fetch();
+
+            echo $twig->render('stock.twig', array('company' => $company,
+                                                   'user' => $_SESSION['USER']));
         });
 
         
@@ -172,6 +183,18 @@
             Session::clear();
             Redirection::out();
         });
+    });
+
+    use GuzzleHttp\Client;
+
+    $router->get("/company/{symbol}", function($symbol) {
+        $api_key = "DLTX-GLV63LGIO38K";
+        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=full&apikey=$api_key";
+
+        $client = new Client();
+        $res = $client->get($uri);
+
+        echo $res->getBody();
     });
 
     $router->set404(function()  use($twig) {
