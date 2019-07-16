@@ -249,6 +249,35 @@
             Connection::close();
         });
 
+        $router->get('/stocks/{number}', function($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $company = $q->fetch();
+            echo $twig->render('admin_stock.twig', array('COMPANY' => $company));
+        });
+
+        $router->post('/stocks/{number}', function ($number) use($twig) {
+            echo $_POST['company_name'];
+            if($_POST['action'] == "EDITAR"){
+                $q = new Query('UPDATE TB_COMPANY SET COMPANY_NAME = :NOME, COMPANY_INFO = :INFO, COMPANY_SYMBOL = :SYMBOL
+                    WHERE COMPANY_PK = :PK');
+            $q->execute(array(':PK' => $number, ':NOME' => $_POST['company_name'], ':INFO'=>$_POST['company_info'],
+                             ':SYMBOL' =>$_POST['company_symbol']));
+
+            Redirection::to('/localhost/admin/stocks');
+
+            }
+            
+            else if($_POST['action']=="REMOVER"){
+                // DELETE FROM nome_tabela WHERE condição
+                $q = new Query('DELETE FROM TB_COMPANY WHERE COMPANY_PK = :PK');
+                $q->execute(array(':PK' => $number));
+
+                Redirection::to('/localhost/admin/stocks');
+            }
+        });
+
         $router->get('/users/{number}', function ($number) use($twig) {
             $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
             $q->execute(array(':PK' => $number));
@@ -296,6 +325,15 @@
         });
     });
 
+    use GuzzleHttp\Client;
+    
+    $router->get("/company/{symbol}", function($symbol) {
+        $api_key = "DLTX-GLV63LGIO38K";
+        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=full&apikey=$api_key";
+        $client = new Client();
+        $res = $client->get($uri);
+        echo $res->getBody();
+    });
 
     $router->set404(function()  use($twig) {
         header('HTTP/1.1 404 Not Found');

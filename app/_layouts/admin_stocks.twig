@@ -13,8 +13,8 @@
         <div class="col text-center">
             <h1>Lista de empresas</h1>
         </div>
-        <div style="overflow: auto; height:300px">
-            <table class="table table-striped">
+        <div style="overflow: auto; height:80%">
+            <table class="table">
                 <thead>
                     <tr class="text-center">
                         <th scope="col">Código</th>
@@ -28,10 +28,15 @@
                     {% for company in companies %}
                     <tr class="text-center">
                         {% for k, v in company %}
-                        <td>{{ v }}</td>
+                          <td>{{ v }}</td>
                         {% endfor %}
-                    </tr>
+                        
+                        <td>
+                          <a href="admin/stocks/{{ company['COMPANY_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
+                        </td>
                     {% endfor %}
+                    
+                    </tr>
                 </tbody>
             </table>
         </div>
