@@ -2,3 +2,8 @@
 # PHP 
 #
 /app/_cache
+
+#
+# Specific config.ini file for database configuration
+#
+app/Database/config.ini
