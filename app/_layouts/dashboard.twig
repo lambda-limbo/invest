@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h1>Bem vindo, {{ username }}</h1>
+    <h1>Bem vindo, {{ name }}</h1>
     Dinheiro disponível: {{wallet}}
     <div class="row align-items-center">
         <div class="col">
@@ -50,10 +50,10 @@
 var data = [
 {
     values: [
-    30, 70
+    {{grafico1}},{{grafico2}}
     ],
     labels: [
-    'Valor em Carteira', 'Valor em Ativos'
+    'Valor em Ativos', 'Valor em Carteira'
     ],
     domain: {
         column: 0
