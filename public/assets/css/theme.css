@@ -1,7 +1,3 @@
-/**
- * Bootstrap overrides and improvements
- */
-
 nav > * {
     text-transform: uppercase;
 }
@@ -16,7 +12,7 @@ footer {
 
 
 /**
- * Theme specific classes
+ * Theme classes
  */
 
 .text-whiter {
@@ -29,4 +25,11 @@ footer {
 
 .img-inverter {
     filter: invert(100%)
+}
+
+/**
+ * Improvements over some third party elements 
+ */
+ .modebar {
+    display: none !important;
 }
