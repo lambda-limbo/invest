@@ -1,6 +1,7 @@
 <?php
 
 use Invest\Models\Company;
+
 use PHPUnit\Framework\TestCase;
 
 class CompanyTest extends TestCase {
