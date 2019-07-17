@@ -120,40 +120,6 @@
 
     $router->post('/contact', function() use($twig) {
     });
-
-    $router->post('/money', function() use($twig) {
-
-        $wallet = $_POST["user_wallet"];
-        $login = $_SESSION['USER']["username"];
-        $password = $_POST["user_pass"];
-
-        $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN = :USER");
-        $q->execute(array(':USER' => $login));
-        $result = $q->fetch();
-        
-        if (!password_verify($password, $result['USER_PASSWORD'])) {
-            echo '<script> alert ("Senha incorreta"); location.href=("/internal")</script>';
-            echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
-                                                       'wallet' => $_SESSION['USER']['wallet'],
-                                                       'code' => $_SESSION['USER']['code'],
-                                                       'name' => $_SESSION['USER']['name']));
-        } else {
-            $code = $_SESSION['USER']['code'];
-            $new_wallet = $_SESSION['USER']['wallet'] + $wallet;
-
-            $q2 = new Query("CALL P_UPDATE_WALLET(:CODIGO, :WALLET)");
-            $q2->execute(array(':CODIGO' => $code, ':WALLET' => $new_wallet));
-
-            $_SESSION['USER']['wallet'] = $new_wallet;
-            $result = $q->fetch();
-
-            echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
-                                                       'wallet' => $_SESSION['USER']['wallet'],
-                                                       'code' => $_SESSION['USER']['code'],
-                                                       'name' => $_SESSION['USER']['name']));
-        }
-            
-    });
     
     // Middleware to check if the user has been logged in. For some reason I 
     // two of them because the regexes (internal/.*)|(internal/) don't work.
@@ -170,34 +136,33 @@
     });
 
     $router->mount('/internal', function() use ($router, $twig) {
+        
         $router->get('/', function() use ($twig) {
-            $codigo = $_SESSION['USER']['code'];
-
-            $q1 = new Query("CALL P_SUM_BUY(:CODIGO)");
-            $q1->execute(array(':CODIGO' => $codigo));
+            $code = (int) $_SESSION['USER']['code'];
             
-            $compra =  $q1->fetchAll();
+            $q = new Query("CALL P_SUM_BUY(:CODE)");
+            $q->execute(array(':CODE' => $code));
 
-            $q2 = new Query("CALL P_SUM_SELL(:CODIGO)");
-            $q2->execute(array(':CODIGO' => $codigo));
+            $bought = $q->fetchAll()[0]['VALOR'];
 
-            $venda = $q2->fetchAll();
+            $total = $bought + $_SESSION['USER']['wallet'];
+            $p_wallet = $_SESSION['USER']['wallet']/$total;
+            $p_bought =  $bought/$total;
 
-            $valorAplicado = $compra[0]['VALOR'] -  $venda[0]['VALOR'];
-            $_SESSION['USER']['aplicado'] = $valorAplicado;
+            if ($total != 0) { 
+                $_SESSION['USER']['graph1'] = array('wallet' => $p_wallet, 'bought' => $p_bought);
+            } else {
+                $_SESSION['USER']['graph1'] = array('wallet' => 0, 'bought' => 0);
+            }
 
-            $_SESSION['USER']['total'] = $_SESSION['USER']['aplicado'] + $_SESSION['USER']['wallet'];
-
-
-            $_SESSION['USER']['grafico1'] = ($_SESSION['USER']['aplicado']/$_SESSION['USER']['total'])*100;
-            $_SESSION['USER']['grafico2'] = ($_SESSION['USER']['wallet']/$_SESSION['USER']['total'])*100;
+            $_SESSION['USER']['graph2'] = array();
 
             echo $twig->render('dashboard.twig', array('username' => $_SESSION['USER']['username'],
                                                         'wallet' => $_SESSION['USER']['wallet'],
                                                         'code' => $_SESSION['USER']['code'],
                                                         'name' => $_SESSION['USER']['name'],
-                                                        'grafico1' =>$_SESSION['USER']['grafico1'],
-                                                        'grafico2'=>$_SESSION['USER']['grafico2']));                               
+                                                        'graph1' => $_SESSION['USER']['graph1'],
+                                                        'graph2'=> $_SESSION['USER']['graph2']));                               
         });
 
         $router->get('/wallet', function() use($twig) {
@@ -213,6 +178,31 @@
             echo $twig->render('stocks.twig', array('companies' => $companies));
         });
 
+        $router->post('/money', function() use($twig) {
+            $wallet = $_POST["user_wallet"];
+            $login = $_SESSION['USER']["username"];
+            $password = $_POST["user_pass"];
+    
+            $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN = :USER");
+            $q->execute(array(':USER' => $login));
+            $result = $q->fetch();
+            
+            if (!password_verify($password, $result['USER_PASSWORD'])) {
+                echo '<script> alert ("Senha incorreta"); location.href=("/internal")</script>';
+            } else {
+                $code = $_SESSION['USER']['code'];
+                $new_wallet = $_SESSION['USER']['wallet'] + $wallet;
+    
+                $q2 = new Query("CALL P_UPDATE_WALLET(:CODIGO, :WALLET)");
+                $q2->execute(array(':CODIGO' => $code, ':WALLET' => $new_wallet));
+    
+                $_SESSION['USER']['wallet'] = $new_wallet;
+                $result = $q->fetch();
+            }
+    
+            Redirection::to('internal');
+        });
+
         $router->get('/stocks/{number}', function ($stock) use($twig) {
             $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
             $q->execute(array(':PK' => $stock));
@@ -222,12 +212,55 @@
             echo $twig->render('stock.twig', array('company' => $company,
                                                    'user' => $_SESSION['USER']));
         });
+
+        $router->post('/stocks/buy/{number}', function($stock) use($twig) {
+
+        });
+
+        $router->post('/stocks/sell/{number}', function($stock) use($twig) {
+
+        });
         
         $router->get('/reports', function() use($twig) {
             $q = new Query("CALL P_REPORT(:CODE)");
             $q->execute(array(':CODE' => $_SESSION['USER']['code']));
 
-            echo $twig->render('reports.twig', array('report' => $q->fetchAll()));
+            $reports = $q->fetchAll();
+
+            print_r($reports);die();
+            echo $twig->render('reports.twig', array('reports' => $reports));
+        });
+
+        /**
+         * Generates reports to the user
+         */
+        $router->get('/report', function() use ($twig) {
+            $pk = $_SESSION['USER']['code'];
+
+            $query = new Query("CALL P_SUM_BUY(:PK)");
+            $query->execute(array(':PK' => $pk));
+
+            $sum_buy = $query->fetch();
+
+            $q = new Query("SELECT DISTINCT COMPANY_SYMBOL FROM TB_COMPANY C
+                            INNER JOIN TB_STOCK S ON S.TB_COMPANY_COMPANY_PK = C.COMPANY_PK
+                            INNER JOIN TB_TRANSACTION T ON T.STOCK_PK = S.STOCK_PK AND T.USER_PK = :PK 
+                            AND TRANSACTION_TYPE = 'Compra'");
+
+            $q->execute(array(':PK' => $pk));
+
+            $porfolio = $q->fetchAll();
+
+            $q_buys = new Query("SELECT TRANSACTION_DATE, TRANSACTION_TOTAL FROM TB_TRANSACTION T
+                                 INNER JOIN TB_STOCK S ON S.STOCK_PK = T.STOCK_PK
+                                 WHERE T.TRANSACTION_TYPE = 'COMPRA'");
+
+            $q_buys->execute();
+            $actions_buys = $q_buys->fetchAll();
+
+            $r = new Report($_SESSION['USER']['name'], $_SESSION['USER']['wallet'], $porfolio, $sum_buy, $actions_buys);
+
+            echo $r->get();
         });
         
         $router->get('/exit', function() use($twig) {

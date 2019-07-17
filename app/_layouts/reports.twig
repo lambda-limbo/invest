@@ -9,10 +9,10 @@
         </div>
         <div class="row">
             <div class="col">
-                <div class="col text-center">
-                    <h1>Histórico de Compras dos Ativos</h1>
+                <div class="col">
+                    <h1>EXTRATO DE CONTA</h1>
                 </div>
-                <div style="overflow: auto; height:200px">
+                <div style="overflow: auto; height: 300px">
                 <table class="table table-striped">
                     <thead>
                         <tr class = "text-center">
@@ -23,7 +23,7 @@
                     </thead>
                     <tbody>
                        <tr>
-                        {% for reports in report %}
+                        {% for report in reports %}
                             {% for k, v in report %}
                             
                                 <tr class = "text-center">
@@ -34,68 +34,22 @@
                             {% endfor %}
                             {% endfor %}
                         </tr>
-                            
-                        
                     </tbody>
                 </table>
             </div>
             </div>
-
         </div>
     </div>
 
+    <div class="d-flex flex-row-reverse mt-3">
+        <form action="/internal/report" method="get">
+            <input type="submit" class="btn btn-dark" name="" value="GERAR RELATÓRIO">
+        </form>
+    </div>
 {% endblock %}
 
 {% block scripts %}
     <script>
-        var trace1 = {
-            x: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ],
-            y: [
-                1001,
-                1400,
-                2525,
-                1656,
-                128,
-                2288,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            ],
-            type: 'bar',
-            name: 'Primary Product',
-            marker: {
-                color: 'rgb(49,130,189)',
-                opacity: 0.7
-            }
-        };
-
-
-        var data = [trace1];
-
-        var layout = {
-            title: 'Ativos 2019',
-            xaxis: {
-                tickangle: -45
-            },
-            barmode: 'group'
-        };
-
-        Plotly.newPlot('chart', data, layout);
+        
     </script>
 {% endblock %}

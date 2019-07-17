@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid">
     <h1>Bem vindo, {{ username }}</h1>
-    Dinheiro disponível: {{wallet}}
+    <p class="badge badge-success">Dinheiro disponível: R${{wallet}}</p>
     <div class="row align-items-center">
         <div class="col">
             <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
@@ -26,10 +26,10 @@
       </button>
   </div>
   <div class="modal-body">
-    <form method="post" action="money" spellcheck="false">
+    <form method="post" action="internal/money" spellcheck="false">
         <div class="form-group">
             <label for="user_wallet">Valor:</label>
-            <input type="number" class="form-control" name="user_wallet"  placeholder="Digite o valor" required>
+            <input type="number" class="form-control" name="user_wallet" id="money" placeholder="Digite o valor" required>
         </div>
 
         <div class="form-group">
@@ -44,61 +44,36 @@
 </div>
 {% endblock %}
 
-
 {% block scripts %}
 <script>
-var data = [
-{
-    values: [
-    0, 0
-    ],
-    labels: [
-    'Valor em Carteira', 'Valor em Ativos'
-    ],
-    domain: {
-        column: 0
-    },
-    name: 'Carteira',
-    hoverinfo: 'label+percent+name',
-    hole: .7,
-    type: 'pie'
-}, {
-    values: [
-    50, 10, 5, 5, 30
-    ],
-    labels: [
-    'Petrobas', 'Uber', 'Google', 'Facebook', 'Spotify'
-    ],
-    domain: {
-        column: 1
-    },
-    name: '',
-    hoverinfo: 'label+percent+name',
-    hole: .7,
-    type: 'pie'
-}
-];
-
-var layout = {
-    title: '',
-    grid: {
-        rows: 1,
-        columns: 2
-    },
-    showlegend: false,
-    annotations: [
+    var data = [
     {
-        font: {
-            size: 14
+        values: [
+        {{ graph1['wallet'] }}, {{ graph1['bought'] }}
+        ],
+        labels: [
+        'Valor em Carteira', 'Valor em Ativos'
+        ],
+        domain: {
+            column: 0
         },
-        showarrow: false,
-        text: 'CARTEIRA',
-        x: 0.,
-        y: 0.5
+        name: 'Carteira',
+        hoverinfo: 'label',
+        hole: .8,
+        type: 'pie'
     }
-    ]
-};
+    ];
 
-Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
+    var layout = {
+        title: '',
+        grid: {
+            rows: 1
+        },
+        showlegend: false,
+    };
+
+    Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
+
+    $('#money').mask("#.##0,00", {reverse: true});
 </script>
 {% endblock %}
