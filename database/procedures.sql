@@ -42,16 +42,6 @@ BEGIN
 END
 //
 
---
--- @brief Select an specific user with a given primary key.
---
-DELIMITER //
-CREATE  PROCEDURE P_SELECT_USER(IN PK_CODE INT)
-BEGIN
-  SELECT * FROM TB_USER WHERE USER_PK = PK_CODE;
-END
-//
-
 
 -- 
 -- @brief Changes the email of a given user primary key

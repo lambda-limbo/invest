@@ -2,7 +2,7 @@
 -- Insert default values for the admin roles.
 --
 
-USE INVEST;
+USE INVEST_DATABASE;
 
 -- The password values are examples because actually the password will be hashed.
 

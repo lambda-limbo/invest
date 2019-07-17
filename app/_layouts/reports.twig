@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
+                <div id="graph"></div>
             </div>
         </div>
         <div class="row">
@@ -13,30 +13,27 @@
                     <h1>EXTRATO DE CONTA</h1>
                 </div>
                 <div style="overflow: auto; height: 300px">
-                <table class="table table-striped">
-                    <thead>
-                        <tr class = "text-center">
-                            <th scope="col">Data</th>
-                            <th scope="col">Ativo</th>
-                            <th scope="col">R$</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       <tr>
-                        {% for report in reports %}
-                            {% for k, v in report %}
-                            
-                                <tr class = "text-center">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class = "text-center">
+                                <th scope="col">Data</th>
+                                <th scope="col">Ativo</th>
+                                <th scope="col">R$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                                {% for k, v in report %}
+                                    <tr class = "text-center">
                                     <td>{{ v.DATA }}</td>
                                     <td>{{ v.NOME }}</td>
                                     <td>{{ v.VALOR }}</td>
                                     </tr>
+                                {% endfor %}
                             {% endfor %}
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

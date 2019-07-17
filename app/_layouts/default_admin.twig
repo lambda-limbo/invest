@@ -13,10 +13,6 @@
         <link href="assets/css/all.min.css" rel="stylesheet">        
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="assets/css/override.css" rel="stylesheet">
-
-        <script src="assets/js/jquery.min.js" defer></script>
-        <script src="assets/js/jquery.mask.min.js" defer></script>
-        <script src="assets/js/bootstrap.bundle.min.js" defer></script>
     </head>
     <body class="">
         {% if error %}
@@ -30,7 +26,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-light">
             <a href="/" class="navbar-brand">
-                <img src="assets/img/logo/mllr.png" width="125" height="50" alt="MLLR logo">
+                <img src="assets/img/logo/mllr.png" width="135" height="60" alt="MLLR logo">
             </a>
             
             <button class="navbar-toggler" data-target="#collapsible-navbar" data-toggle="collapse" type="button">
@@ -57,6 +53,9 @@
             {% endblock %}
         </section>
 
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/jquery.mask.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
         {% block scripts %}
         {% endblock %}
     </body>

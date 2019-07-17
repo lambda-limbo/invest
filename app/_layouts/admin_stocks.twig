@@ -13,24 +13,30 @@
         <div class="col text-center">
             <h1>Lista de empresas</h1>
         </div>
-        <div style="overflow: auto; height:300px">
-            <table class="table table-striped">
+        <div style="overflow: auto; height:80%">
+            <table class="table">
                 <thead>
                     <tr class="text-center">
                         <th scope="col">Código</th>
                         <th scope="col">Nome</th>
                         <th scope="col">Informações</th>
                         <th scope="col">Símbolo</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for company in companies %}
                     <tr class="text-center">
                         {% for k, v in company %}
-                        <td>{{ v }}</td>
+                          <td>{{ v }}</td>
                         {% endfor %}
-                    </tr>
+                        
+                        <td>
+                          <a href="admin/stocks/{{ company['COMPANY_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
+                        </td>
                     {% endfor %}
+                    
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -53,7 +59,7 @@
       </button>
   </div>
   <div class="modal-body">
-    <form method="post" action="/internal/company" spellcheck="false">
+    <form method="post" action="/admin/stocks" spellcheck="false">
         <div>
             <div class="form-group">
                 <label for="name">Nome</label>
@@ -64,12 +70,13 @@
                 <input type="text" class="form-control" name="symbol" placeholder="VALE" required>
             </div>
             <div class="form-group">
-            <label>Informações</label>
-            <textarea name="info" cols="30" rows="7" class="form-control" placeholder="Informações" required></textarea>
-        </div>
-        <div class="form-group text-right">
+               <label>Informações</label>
+               <textarea name="info" cols="30" rows="7" class="form-control" placeholder="Informações" required></textarea>
+           </div>
+           <div class="form-group text-right">
             <button type="submit" class="btn btn-primary">CADASTRAR</button>
-    </div>
+        </div>
+        
     </form> 
 </div>
 </div>

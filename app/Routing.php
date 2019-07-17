@@ -9,8 +9,10 @@
     use Invest\Middleware\Redirection;
     use Invest\Middleware\ServerError;
     use Invest\Middleware\Authentication;
-    
-    // Global routing variable for the external pages
+
+    use Invest\Models\User;
+
+// Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
                     'investimentos' => '/investments', 
                     'contato' => '/contact', 
@@ -21,6 +23,7 @@
                       'carteira'=> array('url' => '/wallet', 'icon' => 'fa fa-wallet'),
                       'ativos'=> array('url' => '/stocks', 'icon' => 'fa fa-layer-group'),
                       'relatórios'=> array('url' => '/reports', 'icon' => 'fa fa-file-pdf'),
+                      'conta' => array('url' => '/settings', 'icon' => 'fa fa-cog'),
                       'logout'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
     
     $admin = array('usuários' => array ('url' => '/users', 'icon' => 'fa fa-users'),
@@ -88,25 +91,16 @@
         
             $name = $_POST["name"];
             $username = $_POST["username"];
-            $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-
+            $password = $_POST["password"];
             $cpf = $_POST["cpf"];
             $email = $_POST["email"];
             $phone = $_POST["phone"];
             $birth = $_POST["birth"];
             $wallet = 0;
             
-            $q = new Query("CALL P_INSERT_USER (:NAME, :USERNAME, :PASSWORD, :CPF, :EMAIL, :PHONE, :BIRTH, :WALLET)");
-            $q->execute(array(':NAME' => $name, 
-                              ':USERNAME' => $username, 
-                              ':PASSWORD' => $password, 
-                              ':CPF' => $cpf, 
-                              ':EMAIL' => $email, 
-                              ':PHONE' => $phone, 
-                              ':BIRTH' => $birth, 
-                              ':WALLET' => $wallet));
+            $user = new User($username, $password, $name, $cpf, $email, $birth, $phone, $wallet, 0);
+            $user->save();
             
-            echo '<script> alert ("Cadastro efetuado com sucesso"); location.href=("/login")</script>';
             echo $twig->render('login.twig');
     });
 
@@ -119,6 +113,28 @@
     });
 
     $router->post('/contact', function() use($twig) {
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $phone = $_POST["phone"];
+        $message = $_POST["message"];
+
+        if (strlen($message) > 5) {
+            $twig->render('contact.twig', array('message' => array('css' => 'alert-danger',
+                                                                   'content' => 'Por favor, utilize menos de 1000 caracteres')));
+        }
+
+        $q = new Query('INSERT INTO TB_CONTACT(CONTACT_NAME, CONTACT_EMAIL, CONTACT_PHONE, CONTACT_TEXT) 
+                        VALUES(:NAME, :EMAIL, :PHONE, :TEXT)');
+
+        $r = $q->execute(array(':NAME' => $name, ':EMAIL' => $email, ':PHONE' => $phone, ':TEXT' => $message));
+
+        if ($r) {
+            echo $twig->render('contact.twig', array('message' => array('css' => 'alert-success',
+                                                                   'content' => 'Mensagem enviada com sucesso')));
+        } else {
+            echo $twig->render('contact.twig', array('message' => array('css' => 'alert-warning',
+                                                                   'content' => '500 - Internal Server Error')));
+        }
     });
     
     // Middleware to check if the user has been logged in. For some reason I 
@@ -146,10 +162,11 @@
             $bought = $q->fetchAll()[0]['VALOR'];
 
             $total = $bought + $_SESSION['USER']['wallet'];
-            $p_wallet = $_SESSION['USER']['wallet']/$total;
-            $p_bought =  $bought/$total;
 
             if ($total != 0) { 
+                $p_wallet = $_SESSION['USER']['wallet']/$total;
+                $p_bought =  $bought/$total;
+
                 $_SESSION['USER']['graph1'] = array('wallet' => $p_wallet, 'bought' => $p_bought);
             } else {
                 $_SESSION['USER']['graph1'] = array('wallet' => 0, 'bought' => 0);
@@ -227,7 +244,6 @@
 
             $reports = $q->fetchAll();
 
-            print_r($reports);die();
             echo $twig->render('reports.twig', array('reports' => $reports));
         });
 
@@ -243,8 +259,8 @@
             $sum_buy = $query->fetch();
 
             $q = new Query("SELECT DISTINCT COMPANY_SYMBOL FROM TB_COMPANY C
-                            INNER JOIN TB_STOCK S ON S.TB_COMPANY_COMPANY_PK = C.COMPANY_PK
-                            INNER JOIN TB_TRANSACTION T ON T.STOCK_PK = S.STOCK_PK AND T.USER_PK = :PK 
+                            INNER JOIN TB_STOCK S ON S.FK_COMPANY_PK = C.COMPANY_PK
+                            INNER JOIN TB_TRANSACTION T ON T.FK_STOCK_PK = S.STOCK_PK AND T.FK_USER_PK = :PK 
                             AND TRANSACTION_TYPE = 'Compra'");
 
             $q->execute(array(':PK' => $pk));
@@ -310,19 +326,80 @@
         });
 
         $router->post('/stocks', function() use($twig) {
-                    $name = $_POST["name"];
-                    $info = $_POST["info"];
-                    $symbol = $_POST["symbol"];
+            $name = $_POST["name"];
+            $info = $_POST["info"];
+            $symbol = $_POST["symbol"];
 
-                    $q = new Query("CALL P_INSERT_COMPANY(:NAME, :INFO, :SYMBOL)");
-                    
-                    try {
-                        $q->execute(array(':NAME' => $name, ':INFO' => $info, ':SYMBOL' => $symbol));
+            $q = new Query("CALL P_INSERT_COMPANY(:NAME, :INFO, :SYMBOL)");
+            $q->execute(array(':NAME' => $name, ':INFO' => $info, ':SYMBOL' => $symbol));
+            $result = $q->fetchAll();
 
-                        Redirection::to('/admin/stocks');
-                    } catch (DatabaseException $e) {
-                        echo $twig->render('/stocks', ServerError::get(500, 'Internal server error', $e));
-                    }
+            echo $twig->render('admin_stocks.twig', array('companies' => $result));
+        });
+
+        $router->get('/stocks/{number}', function($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $company = $q->fetch();
+            echo $twig->render('admin_stock.twig', array('COMPANY' => $company));
+        });
+
+        $router->post('/stocks/{number}', function ($number) use($twig) {
+            if ($_POST['action'] == "EDITAR") {
+                $q = new Query('UPDATE TB_COMPANY SET COMPANY_NAME = :NOME, COMPANY_INFO = :INFO, COMPANY_SYMBOL = :SYMBOL
+                    WHERE COMPANY_PK = :PK');
+                $q->execute(array(':PK' => $number, ':NOME' => $_POST['company_name'], ':INFO'=>$_POST['company_info'],
+                                  ':SYMBOL' =>$_POST['company_symbol']));
+
+                Redirection::to('admin/stocks');
+            } else if ($_POST['action'] == "REMOVER" ) {
+                $q = new Query('DELETE FROM TB_COMPANY WHERE COMPANY_PK = :PK');
+                $q->execute(array(':PK' => $number));
+
+                Redirection::to('admin/stocks');
+            }
+        });
+
+        $router->get('/users/{number}', function ($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $user = $q->fetch();
+            echo $twig->render('admin_user.twig', array('USER' => $user));
+
+        });
+
+
+        $router->get('/users/{number}', function ($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number));
+
+            $user = $q->fetch();
+            echo $twig->render('admin_user.twig', array('USER' => $user));
+
+        });
+
+        $router->post('/users/{number}', function ($number) use($twig) {
+
+            // UPDATE `invest_database`.`TB_USER` SET `USER_NAME` = 'rrrw', `USER_EMAIL` = 'errre', `USER_PHONE` = '1332', `USER_ADM` = '1' WHERE (`USER_PK` = '1');
+            if($_POST['action'] == "EDITAR") {
+                $q = new Query('UPDATE TB_USER SET USER_NAME = :NOME, USER_EMAIL = :EMAIL, USER_PHONE = :PHONE, USER_ADM = :ADM 
+                WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number, ':NOME' => $_POST['user_name'], ':EMAIL'=>$_POST['user_email'],
+                             ':PHONE' =>$_POST['user_phone'], ':ADM' => $_POST['user_adm'],));
+
+            Redirection::to('/localhost/admin/users');
+
+            }
+            
+            else if($_POST['action']=="REMOVER"){
+                // DELETE FROM nome_tabela WHERE condição
+                $q = new Query('DELETE FROM TB_USER WHERE USER_PK = :PK');
+                $q->execute(array(':PK' => $number));
+
+                Redirection::to('/localhost/admin/users');
+            }
         });
 
         $router->get('/exit', function() use ($twig) {
@@ -332,21 +409,61 @@
     });
 
     use GuzzleHttp\Client;
-
+    
     $router->get("/company/{symbol}", function($symbol) {
         $api_key = "DLTX-GLV63LGIO38K";
-        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=compact&apikey=$api_key";
-
+        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=full&apikey=$api_key";
         $client = new Client();
         $res = $client->get($uri);
-
+        
         $body = (string) $res->getBody();
+        //echo $body;
         $json = json_decode($body, true);
+        //print_r($json['Meta Data']);
+        //print_r($json['Time Series (Daily)']);
+        //print_r($json);
+        $start_date = '2019-07-16';
+        
 
-        foreach($json['Time Series (Daily)'] as $stock) {
-            print_r($stock);
+        $q = new Query('SELECT COMPANY_PK FROM TB_COMPANY WHERE COMPANY_SYMBOL = :SYMBOL');
+        $q->execute(array(':SYMBOL'=>$symbol));
+
+        $company = $q->fetch();
+        $number =  $company['COMPANY_PK'];
+        
+
+        //echo($json['Time Series (Daily)']['2019-07-16']['1. open']);
+        foreach ($json['Time Series (Daily)'] as $stock){
+            //print_r($stock);
+            //echo($stock['3. low']);
+
+            $low = ($stock['3. low']);
+            $open = ($stock['1. open']);
+            $high = ($stock['2. high']);
+            $close = ($stock['4. close']);
+            echo ("open = $open");
             echo "<br>";
+            echo ("high = $high");
+            echo "<br>";
+            echo ("low = $low");
+            echo "<br>";
+            echo ("close = $close");
+            echo "<br>";
+
+            $q1 = new Query('INSERT INTO TB_COMPANY_HISTORY (COMPANY_HISTORY_MINIMIUM, COMPANY_HISTORY_MAXIMIUM, 
+                COMPANY_HISTORY_DATE, COMPANY_HISTORY_OPENING_VALUE, COMPANY_HISTORY_CLOSE_VALUE, COMPANY_PK) 
+                    VALUES
+                (:LOW, :HIGH, :DATA, :OPEN, :CLOSE, :PK);');
+                
+            $q1->execute(array(':LOW' => $low, ':HIGH' => $high, ':DATA'=>$start_date,
+                             ':OPEN' =>$open, ':CLOSE' => $close, ':PK' => $number));
+            
+            $start_date=date('Y/m/d', strtotime('-1 day'));
+
+            echo "<br>";
+            
         }
+    
     });
 
     $router->set404(function()  use($twig) {

@@ -1,25 +1,33 @@
 {% extends "default_internal.twig" %}
 
 {% block content %}
-<div class="container-fluid">
-    <h1>Bem vindo, {{ username }}</h1>
-    <p class="badge badge-success">Dinheiro disponível: R${{wallet}}</p>
-    <div class="row align-items-center">
-        <div class="col">
-            <div id="chart"><!-- Plotly chart will be drawn inside this DIV --></div>
-        </div>
-
+<h1>Bem vindo, {{ name }}.</h1>
+<div class="row align-items-center mt-5">
+    <div class="">
+        <h5>PATRIMÔNIO</h5>
+        <p class="text-muted">R${{ wallet }}</p>
+        <h5>APLICADO</h5>
+        <p class="text-muted">R${{ wallet }}</p>
     </div>
-    <div class="col-md text-right"> 
-        <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-money">
-          <i class="fa fa-hand-holding-usd"></i> Depositar dinheiro
-      </button>
-  </div>
+    <div class="col-md text-center">
+        {% if graph1['wallet'] > 0 or graph1['bought'] > 0 %}
+            <div id="dashboard-graph"></div>
+        {% else %}
+            <div class="p-5">
+                Parece que você está sem dinheiro na conta, inicie com um depósito e vamos começar com os investimentos.
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div class="col-md text-right"> 
+    <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-money">
+        <i class="fa fa-hand-holding-usd"></i> Depositar dinheiro
+    </button>
 </div>
 <div class="modal fade"  tabindex="-1"  role="dialog" id="modal-money">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content" style="overflow: auto; height:500px">
-      <div class="modal-header">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow: auto;">
+        <div class="modal-header">
         <h5 class="modal-title">Déposito</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
           <span aria-hidden="true">&times;</span>
@@ -29,14 +37,16 @@
     <form method="post" action="internal/money" spellcheck="false">
         <div class="form-group">
             <label for="user_wallet">Valor:</label>
-            <input type="number" class="form-control" name="user_wallet" id="money" placeholder="Digite o valor" required>
+            <input type="text" class="form-control" name="user_wallet" id="money" placeholder="1.551,00" required>
         </div>
 
         <div class="form-group">
             <label for="user_pass">Confirmar senha:</label>
             <input type="password" class="form-control" name="user_pass" placeholder="*******" required>
         </div>
-        <button type="submit" class="btn btn-primary">DEPOSITAR</button> 
+        <div class="form-group text-right">
+            <button type="submit" class="btn btn-primary">DEPOSITAR</button> 
+        </div>
     </form> 
 </div>
 </div>
@@ -46,10 +56,17 @@
 
 {% block scripts %}
 <script>
+    $('#money').mask("#.##0,00", {reverse: true});
+    
     var data = [
     {
         values: [
-        {{ graph1['wallet'] }}, {{ graph1['bought'] }}
+            {% if graph1['wallet'] > 0 %}
+            {{ graph1['wallet'] }}, 
+            {% endif %}
+            {% if graph1['bought'] > 0 %}
+            {{ graph1['bought'] }},
+            {% endif %}
         ],
         labels: [
         'Valor em Carteira', 'Valor em Ativos'
@@ -72,8 +89,6 @@
         showlegend: false,
     };
 
-    Plotly.newPlot('chart', data, layout, {showSendToCloud: true});
-
-    $('#money').mask("#.##0,00", {reverse: true});
+    Plotly.newPlot('dashboard-graph', data, layout);
 </script>
 {% endblock %}

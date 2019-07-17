@@ -13,14 +13,12 @@
         <link href="assets/css/all.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="assets/css/override.css" rel="stylesheet">
-
-        <script src="assets/js/jquery.min.js" defer></script>
-        <script src="assets/js/jquery.mask.min.js" defer></script>
-        <script src="assets/js/bootstrap.bundle.min.js" defer></script>
     </head>
     <body class="">
         <nav class="navbar navbar-expand-md navbar-light">
-            <a class="navbar-brand" href=""><img height="50" src="assets/img/logo/mllr.png" width="125"></a>
+            <a class="navbar-brand" href="/internal">
+                <img src="assets/img/logo/mllr.png" width="135" height="60">
+            </a>
        
             <button class="navbar-toggler" data-target="#collapsible-navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
@@ -46,7 +44,49 @@
             {% endblock %}
         </section>
 
-        
+        <footer class="bg-darker text-whiter mt-5 bg-noise">
+            <div class="row p-3">
+                <div class="col-sm d-flex align-items-strech justify-content-center">
+                    <img alt="MLLR Logo" class="img-inverter align-self-center" src="assets/img/logo/mllr.png" width="256" height="128">
+                </div>
+                <address class="col-sm">
+                    <h4>MLLR INVESTIMENTOS</h4>
+                    <small>Prolongamento da Rua Cerejeira, s/n CEP 85892-000 - Bairro São Luiz - Santa Helena - PR - Brasil</small>
+                    <small>Telefone Geral +55 (45) 3268-8800</small>
+                </address>
+                <div class="col-md">
+                    <div class="row">
+                        <div class="col">
+                            <h4>REDES SOCIAIS</h4>
+                            <div class="">
+                                <a class="btn btn-outline-light" href="#" role="button">
+                                    <i class="fab fa-facebook fa-2x"></i>
+                                </a>
+                                <a class="btn btn-outline-light" href="#" role="button">
+                                    <i class="fab fa-instagram fa-2x"></i>
+                                </a>
+                                <a class="btn btn-outline-light" href="#" role="button">
+                                    <i class="fab fa-twitter fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col">
+                            <h4>DESENVOLVEDORES</h4>
+                            <ul class="nav flex-column fa-ul ml-9">
+                                <li><span class="fa-li"><a class="text-whiter" href="https://github.com/rafaelcn/invest"><i class="fas fa-users"></i></span>Contribuir</li></a>
+                                <li><span class="fa-li"><a class="text-whiter" href="https://github.com/rafaelcn/invest/issue/new"><i class="fas fa-bug"></i></span>Reportar bug</li></a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/jquery.mask.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
         {% block scripts %}

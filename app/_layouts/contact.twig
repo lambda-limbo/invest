@@ -1,16 +1,26 @@
 {% extends "default.twig" %}
 
 {% block content %}
-
+{% if message %}
+<div class="alert {{ message.css }} fade show" role="alert">
+	<strong>{{ message.content }}</strong>
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+{% endif %}
 <div class="row">
 	<div class="col">
-		<img src="assets/img/contato.png">
+		<h1>CONTATO</h1>
+		<p>
+			Entre em contato com a gente! Preencha os campos à direita e logo vamos retornamos um email a você.
+		</p>
 	</div>
 	<div class="col">
 		<form action="/contact" method="POST">
 		    <div class="form-group">
 		        <label>Nome Completo</label>
-		        <input type="text" name="username" class="form-control" placeholder="Luiz Otavio" required>
+		        <input type="text" name="name" class="form-control" placeholder="Luiz Otavio" required>
 		    </div>
 		    
 		    <div class="form-group">
@@ -20,18 +30,24 @@
 
 		    <div class="form-group">
 		        <label>Telefone Celular</label>
-		        <input type="text" name="phone" class="form-control" placeholder="(47) 98877-6555" required>
+		        <input type="text" name="phone" id="phone" class="form-control" placeholder="(47) 9 8877-6555" required>
 		    </div>
 
 		    <div class="form-group">
 		    	<label>Mensagem</label>
-		        <textarea name="mensagem" id="" cols="30" rows="7" class="form-control" placeholder="Sua mensagem" required></textarea>
+		        <textarea name="message" id="" cols="30" rows="7" class="form-control" placeholder="Sua mensagem" max-size="1000" required></textarea>
 		    </div>
 
 		    <div class="form-group" align="right">
-		        <input type="submit" class="btn btn-secondary" value="Enviar" />
+		        <input type="submit" class="btn btn-dark" value="Enviar" />
 		    </div>
 		</form>
 	</div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+	$('#phone').mask("(00) 0 0000-0000")
+</script>
 {% endblock %}
