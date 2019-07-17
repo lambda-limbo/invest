@@ -332,7 +332,35 @@
         $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=full&apikey=$api_key";
         $client = new Client();
         $res = $client->get($uri);
-        echo $res->getBody();
+        
+        $body = (string) $res->getBody();
+        //echo $body;
+        $json = json_decode($body, true);
+        //print_r($json);
+        echo($json['Time Series (Daily)']['2019-07-16']['1. open']);
+        foreach ($json['Time Series (Daily)'] as $stock){
+            //print_r($stock);
+            //print_r($stock);
+            //echo($stock['3. low']);
+            //echo "<br>";
+            /*$open = ($stock['1.open']);
+            $high = ($stock['2.high']);
+            $low = ($stock['3.low']);
+            $close = ($stock['4.close']);
+            //INSERT INTO `invest_database`.`TB_COMPANY_HISTORY` (`COMPANY_HISTORY_MINIMIUM`, `COMPANY_HISTORY_MAXIMIUM`, `COMPANY_HISTORY_DATE`, `COMPANY_HISTORY_OPENING_VALUE`, `COMPANY_HISTORY_CLOSE_VALUE`, `COMPANY_PK`) VALUES ('1', '1', '1', '1', '1', '1');
+
+            $q = new Query('INSERT INTO TB_COMPANY_HISTORY (COMPANY_HISTORY_MINIMIUM, COMPANY_HISTORY_MAXIMIUM, 
+                COMPANY_HISTORY_DATE, COMPANY_HISTORY_OPENING_VALUE, COMPANY_HISTORY_CLOSE_VALUE, COMPANY_PK) 
+                    VALUES
+                (:LOW, :HIGH, :DATA, :OPEN, :CLOSE, :PK);
+                WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number, ':LOW' => $low, ':HIGH'=>$high,
+                             ':OPEN' =>$open, ':CLOSE' => $close. :DATA => $data));
+
+
+            echo "<br>";*/
+        }
+    
     });
 
     $router->set404(function()  use($twig) {
