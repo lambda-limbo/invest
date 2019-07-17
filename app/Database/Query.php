@@ -47,7 +47,7 @@ class Query {
             return $this->stmt->execute();
         } catch (PDOException $e) {
             $m = $e->getMessage();
-            throw new DatabaseException("Error executing the query $this->query.\n\n\:: $m\n");
+            throw new DatabaseException("Error executing the query $this->query.\n\n:: $m\n");
         }
     }
 

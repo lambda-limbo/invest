@@ -105,12 +105,6 @@
                               ':PHONE' => $phone, 
                               ':BIRTH' => $birth, 
                               ':WALLET' => $wallet));
-
-            try {
-                $q->execute();
-            } catch(DatabaseException $e) {
-
-            }
             
             echo '<script> alert ("Cadastro efetuado com sucesso"); location.href=("/login")</script>';
             echo $twig->render('login.twig');
@@ -162,21 +156,20 @@
     });
     
     // Middleware to check if the user has been logged in. For some reason I 
-    // two of them because the reges (internal/.*)|(internal/) doesn't work.
-    $router->before('GET|POST', 'internal/.*', function() use ($twig) {
+    // two of them because the regexes (internal/.*)|(internal/) don't work.
+    $router->before('GET|POST', 'internal/.*', function() {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
     });
 
-    $router->before('GET|POST', 'internal/', function() use ($twig) {
+    $router->before('GET|POST', 'internal/', function() {
         if (!Session::exists("USER")) {
             Redirection::out();
         }
     });
 
     $router->mount('/internal', function() use ($router, $twig) {
-
         $router->get('/', function() use ($twig) {
             $codigo = $_SESSION['USER']['code'];
 
@@ -231,12 +224,10 @@
         });
         
         $router->get('/reports', function() use($twig) {
-            
-            $codigo = $_SESSION['USER']['code'];
-            $q = new Query("CALL P_REPORT($codigo)");
-            $q->execute();
+            $q = new Query("CALL P_REPORT(:CODE)");
+            $q->execute(array(':CODE' => $_SESSION['USER']['code']));
+
             echo $twig->render('reports.twig', array('report' => $q->fetchAll()));
-            
         });
         
         $router->get('/exit', function() use($twig) {
@@ -245,6 +236,19 @@
         });
     });
 
+    // Middleware to check if the user has been logged in. For some reason I 
+    // two of them because the regexes (internal/.*)|(internal/) don't work.
+    $router->before('GET|POST', 'admin/.*', function() {
+        if (!Session::exists("ADMIN")) {
+            Redirection::out();
+        }
+    });
+
+    $router->before('GET|POST', 'admin/', function() {
+        if (!Session::exists("ADMIN")) {
+            Redirection::out();
+        }
+    });
 
     $router->mount('/admin', function() use($router, $twig) {
         
@@ -298,12 +302,18 @@
 
     $router->get("/company/{symbol}", function($symbol) {
         $api_key = "DLTX-GLV63LGIO38K";
-        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=full&apikey=$api_key";
+        $uri = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&outputsize=compact&apikey=$api_key";
 
         $client = new Client();
         $res = $client->get($uri);
 
-        echo $res->getBody();
+        $body = (string) $res->getBody();
+        $json = json_decode($body, true);
+
+        foreach($json['Time Series (Daily)'] as $stock) {
+            print_r($stock);
+            echo "<br>";
+        }
     });
 
     $router->set404(function()  use($twig) {
