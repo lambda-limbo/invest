@@ -54,7 +54,7 @@ final class QueryTest extends TestCase {
         try {
             $q->execute();
         } catch (DatabaseException $e) {
-            $this->assertEquals($e->getMessage(), "Error executing the query CALL P_SOME_UNDEFINED_PROCEDURE.\n\n:: SQLSTATE[42000]: Syntax error or access violation: 1305 PROCEDURE invest_database.P_SOME_UNDEFINED_PROCEDURE does not exist\n");
+            $this->assertEquals($e->getMessage(), "Error executing the query CALL P_SOME_UNDEFINED_PROCEDURE.\n\n:: SQLSTATE[42000]: Syntax error or access violation: 1305 PROCEDURE INVEST_DATABASE.P_SOME_UNDEFINED_PROCEDURE does not exist\n");
         }
     }
 }
