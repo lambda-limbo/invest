@@ -336,29 +336,50 @@
         $body = (string) $res->getBody();
         //echo $body;
         $json = json_decode($body, true);
+        //print_r($json['Meta Data']);
+        //print_r($json['Time Series (Daily)']);
         //print_r($json);
-        echo($json['Time Series (Daily)']['2019-07-16']['1. open']);
+        $start_date = '2019-07-16';
+        
+
+        $q = new Query('SELECT COMPANY_PK FROM TB_COMPANY WHERE COMPANY_SYMBOL = :SYMBOL');
+        $q->execute(array(':SYMBOL'=>$symbol));
+
+        $company = $q->fetch();
+        $number =  $company['COMPANY_PK'];
+        
+
+        //echo($json['Time Series (Daily)']['2019-07-16']['1. open']);
         foreach ($json['Time Series (Daily)'] as $stock){
             //print_r($stock);
-            //print_r($stock);
             //echo($stock['3. low']);
-            //echo "<br>";
-            /*$open = ($stock['1.open']);
-            $high = ($stock['2.high']);
-            $low = ($stock['3.low']);
-            $close = ($stock['4.close']);
-            //INSERT INTO `invest_database`.`TB_COMPANY_HISTORY` (`COMPANY_HISTORY_MINIMIUM`, `COMPANY_HISTORY_MAXIMIUM`, `COMPANY_HISTORY_DATE`, `COMPANY_HISTORY_OPENING_VALUE`, `COMPANY_HISTORY_CLOSE_VALUE`, `COMPANY_PK`) VALUES ('1', '1', '1', '1', '1', '1');
 
-            $q = new Query('INSERT INTO TB_COMPANY_HISTORY (COMPANY_HISTORY_MINIMIUM, COMPANY_HISTORY_MAXIMIUM, 
+            $low = ($stock['3. low']);
+            $open = ($stock['1. open']);
+            $high = ($stock['2. high']);
+            $close = ($stock['4. close']);
+            echo ("open = $open");
+            echo "<br>";
+            echo ("high = $high");
+            echo "<br>";
+            echo ("low = $low");
+            echo "<br>";
+            echo ("close = $close");
+            echo "<br>";
+
+            //INSERT INTO `invest_database`.`TB_COMPANY_HISTORY` (`COMPANY_HISTORY_MINIMIUM`, `COMPANY_HISTORY_MAXIMIUM`, `COMPANY_HISTORY_DATE`, `COMPANY_HISTORY_OPENING_VALUE`, `COMPANY_HISTORY_CLOSE_VALUE`, `COMPANY_PK`) VALUES ('1', '1', '1', '1', '1', '1');/*
+            $q1 = new Query('INSERT INTO TB_COMPANY_HISTORY (COMPANY_HISTORY_MINIMIUM, COMPANY_HISTORY_MAXIMIUM, 
                 COMPANY_HISTORY_DATE, COMPANY_HISTORY_OPENING_VALUE, COMPANY_HISTORY_CLOSE_VALUE, COMPANY_PK) 
                     VALUES
-                (:LOW, :HIGH, :DATA, :OPEN, :CLOSE, :PK);
-                WHERE USER_PK = :PK');
-            $q->execute(array(':PK' => $number, ':LOW' => $low, ':HIGH'=>$high,
-                             ':OPEN' =>$open, ':CLOSE' => $close. :DATA => $data));
+                (:LOW, :HIGH, :DATA, :OPEN, :CLOSE, :PK);');
+                
+            $q1->execute(array(':LOW' => $low, ':HIGH' => $high, ':DATA'=>$start_date,
+                             ':OPEN' =>$open, ':CLOSE' => $close, ':PK' => $number));
+            
+            $start_date=date('Y/m/d', strtotime('-1 day'));
 
-
-            echo "<br>";*/
+            echo "<br>";
+            
         }
     
     });
