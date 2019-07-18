@@ -1,8 +1,6 @@
 {% extends "default_admin.twig" %}
 
 {% block content %}
-
-
 <div class="row align-items-center">
     <div class="col">
         <div id="chart"></div>
@@ -10,32 +8,34 @@
 </div>
 <div class="row">
     <div class="col">
-        <div class="col text-center">
-            <h1>Lista de empresas</h1>
-        </div>
+        <h1>EMPRESAS</h1>
+        <p>
+            Nesta seção você pode editar ou cadastrar empresas. Para cadastrar basta clicar no botão de cadastro e 
+            para editar ou remover empresa basta clicar no botão editar correspondente à empresa escolhida.
+        </p>
         <div style="overflow: auto; height:80%">
             <table class="table">
-                <thead>
+                <thead class="thead-dark">
                     <tr class="text-center">
-                        <th scope="col">Código</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Informações</th>
-                        <th scope="col">Símbolo</th>
-                        <th scope="col"></th>
+                        <th scope="col">CÓDIGO</th>
+                        <th scope="col">NOME</th>
+                        <th scope="col">SÍMBOLO</th>
+                        <th scope="col">AÇÃO</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for company in companies %}
                     <tr class="text-center">
                         {% for k, v in company %}
-                          <td>{{ v }}</td>
+                            {% if k != "COMPANY_INFO" %}
+                            <td>{{ v }}</td>
+                            {% endif %}
                         {% endfor %}
                         
                         <td>
-                          <a href="admin/stocks/{{ company['COMPANY_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
+                          <a href="admin/stock/{{ company['COMPANY_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
                         </td>
                     {% endfor %}
-                    
                     </tr>
                 </tbody>
             </table>
@@ -43,9 +43,9 @@
     </div>
 </div>
 
-<div class="col-md text-right"> 
+<div class="col-md text-right mt-5"> 
     <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-company">
-      <i class="fa fa-user-plus"></i> CADASTRAR EMPRESA
+      <i class="fa fa-plus"></i> CADASTRAR EMPRESA
   </button>
 </div>
 
@@ -59,7 +59,7 @@
       </button>
   </div>
   <div class="modal-body">
-    <form method="post" action="/admin/stocks" spellcheck="false">
+    <form method="post" action="/admin/stock" spellcheck="false">
         <div>
             <div class="form-group">
                 <label for="name">Nome</label>

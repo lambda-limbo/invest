@@ -3,33 +3,35 @@
 {% block content %}
 <div class="row">
     <div class="col">
-        <div class="col text-center">
-            <h1>Lista de usuários do sistema</h1>
-        </div>
+        <h1>USUÁRIOS</h1>
+        <p>
+            Nesta seção você pode editar ou cadastrar usuários. Para cadastrar basta clicar no botão de cadastro e 
+            para editar ou remover usuário basta clicar no botão editar correspondente ao usuário escolhido.
+        </p>
         <div style="overflow: auto; height:80%;">
             <table class="table">
-                <thead>
+                <thead class="thead-dark">
                     <tr class="text-center">
-                        <th scope="col">Código</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col"></th>
+                        <th scope="col">CÓDIGO</th>
+                        <th scope="col">NOME</th>
+                        <th scope="col">EMAIL</th>
+                        <th scope="col">TIPO</th>
+                        <th scope="col">AÇÃO</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
                     <tr class="text-center">
                         {% for k, v in user %}
-                        {% if k == "USER_ADM" %}
-                        {% if v == 0 %}
-                        <td>Usuário</td>
-                        {% else %}
-                        <td>Administrador</td> 
-                        {% endif %}
-                        {% else %}
-                        <td>{{ v }}</td>
-                        {% endif %}
+                            {% if k == "USER_ADM" %}
+                                {% if v == 0 %}
+                                    <td>Usuário</td>
+                                {% else %}
+                                    <td>Administrador</td> 
+                                {% endif %}
+                            {% else %}
+                                <td>{{ v }}</td>
+                            {% endif %}
                         {% endfor %}
                         <td>
                             <a href="admin/users/{{ user['USER_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
@@ -42,14 +44,11 @@
     </div>
 </div>
 
-<div class="row text-right"> 
+<div class="col-md text-right mt-5"> 
     <button type="button"  class="btn btn-success"  data-toggle="modal" data-target="#modal-user">
       <i class="fa fa-user-plus"></i> CADASTRAR USUÁRIO
   </button>
 </div>
-
-
-
 
 <div class="modal fade"  tabindex="-1"  role="dialog" id="modal-user">
   <div class="modal-dialog" role="document">
@@ -85,7 +84,7 @@
             </div>
 
             <div class="form-group" >
-                <label for="username">Nome de Usuário</label>
+                <label for="username">Login</label>
                 <input type="text" class="form-control" name="username"  placeholder="Escolha um nome de usuário bem legal!" required>
             </div>
             <div class="form-group">
