@@ -12,6 +12,8 @@
 
     use Invest\Models\User;
 
+    use Invest\Reports\Report;
+
 // Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
                     'investimentos' => '/investments', 
@@ -23,7 +25,7 @@
                       'carteira'=> array('url' => '/wallet', 'icon' => 'fa fa-wallet'),
                       'ativos'=> array('url' => '/stocks', 'icon' => 'fa fa-layer-group'),
                       'relatórios'=> array('url' => '/reports', 'icon' => 'fa fa-file-pdf'),
-                      'conta' => array('url' => '/settings', 'icon' => 'fa fa-cog'),
+                      'configurações' => array('url' => '/settings', 'icon' => 'fa fa-cog'),
                       'logout'=> array('url' => '/exit', 'icon' => 'fa fa-sign-out-alt'));
     
     $admin = array('usuários' => array ('url' => '/users', 'icon' => 'fa fa-users'),
@@ -186,16 +188,7 @@
             echo $twig->render('wallet.twig');
         });
 
-        $router->get('/stocks', function() use($twig) {
-            $q = new Query("SELECT * FROM TB_COMPANY");
-            $q->execute();
-
-            $companies = $q->fetchAll();
-
-            echo $twig->render('stocks.twig', array('companies' => $companies));
-        });
-
-        $router->post('/money', function() use($twig) {
+        $router->post('/wallet', function() use($twig) {
             $wallet = $_POST["user_wallet"];
             $login = $_SESSION['USER']["username"];
             $password = $_POST["user_pass"];
@@ -220,7 +213,16 @@
             Redirection::to('internal');
         });
 
-        $router->get('/stocks/{number}', function ($stock) use($twig) {
+        $router->get('/stocks', function() use($twig) {
+            $q = new Query("SELECT * FROM TB_COMPANY");
+            $q->execute();
+
+            $companies = $q->fetchAll();
+
+            echo $twig->render('stocks.twig', array('companies' => $companies));
+        });
+
+        $router->get('/stock/{number}', function ($stock) use($twig) {
             $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
             $q->execute(array(':PK' => $stock));
 
@@ -230,21 +232,21 @@
                                                    'user' => $_SESSION['USER']));
         });
 
-        $router->post('/stocks/buy/{number}', function($stock) use($twig) {
-
+        $router->post('/stock/{number}/buy', function($stock) use($twig) {
+            // TODO
         });
 
-        $router->post('/stocks/sell/{number}', function($stock) use($twig) {
-
+        $router->post('/stock/{number}/sell', function($stock) use($twig) {
+            // TODO
         });
         
         $router->get('/reports', function() use($twig) {
             $q = new Query("CALL P_REPORT(:CODE)");
             $q->execute(array(':CODE' => $_SESSION['USER']['code']));
 
-            $reports = $q->fetchAll();
+            $bank_statement = $q->fetchAll();
 
-            echo $twig->render('reports.twig', array('reports' => $reports));
+            echo $twig->render('reports.twig', array('reports' => $bank_statement));
         });
 
         /**
@@ -253,30 +255,35 @@
         $router->get('/report', function() use ($twig) {
             $pk = $_SESSION['USER']['code'];
 
-            $query = new Query("CALL P_SUM_BUY(:PK)");
-            $query->execute(array(':PK' => $pk));
+            try {
+                $query = new Query("CALL P_SUM_BUY(:PK)");
+                $query->execute(array(':PK' => $pk));
+            
+                $sum_buy = $query->fetch();
 
-            $sum_buy = $query->fetch();
+                $q = new Query("SELECT DISTINCT COMPANY_SYMBOL FROM TB_COMPANY C
+                                INNER JOIN TB_STOCK S ON S.FK_COMPANY_PK = C.COMPANY_PK
+                                INNER JOIN TB_TRANSACTION T ON T.FK_STOCK_PK = S.STOCK_PK AND T.FK_USER_PK = :PK 
+                                AND TRANSACTION_TYPE = 'Compra'");
 
-            $q = new Query("SELECT DISTINCT COMPANY_SYMBOL FROM TB_COMPANY C
-                            INNER JOIN TB_STOCK S ON S.FK_COMPANY_PK = C.COMPANY_PK
-                            INNER JOIN TB_TRANSACTION T ON T.FK_STOCK_PK = S.STOCK_PK AND T.FK_USER_PK = :PK 
-                            AND TRANSACTION_TYPE = 'Compra'");
+                $q->execute(array(':PK' => $pk));
 
-            $q->execute(array(':PK' => $pk));
+                $porfolio = $q->fetchAll();
 
-            $porfolio = $q->fetchAll();
+                $q_buys = new Query("SELECT TRANSACTION_DATE, TRANSACTION_TOTAL FROM TB_TRANSACTION T
+                                    INNER JOIN TB_STOCK S ON S.STOCK_PK = T.STOCK_PK
+                                    WHERE T.TRANSACTION_TYPE = 'COMPRA'");
 
-            $q_buys = new Query("SELECT TRANSACTION_DATE, TRANSACTION_TOTAL FROM TB_TRANSACTION T
-                                 INNER JOIN TB_STOCK S ON S.STOCK_PK = T.STOCK_PK
-                                 WHERE T.TRANSACTION_TYPE = 'COMPRA'");
-
-            $q_buys->execute();
-            $actions_buys = $q_buys->fetchAll();
+                $q_buys->execute();
+                $actions_buys = $q_buys->fetchAll();
+            } catch (DatabaseException $e) {
+                echo $e->getMessage();
+            }
 
             $r = new Report($_SESSION['USER']['name'], $_SESSION['USER']['wallet'], $porfolio, $sum_buy, $actions_buys);
+            $pdf = $r->get();
 
-            echo $r->get();
+            echo $twig->render('reports.twig', array('report' => array('url' => $pdf)));
         });
         
         $router->get('/exit', function() use($twig) {
@@ -300,7 +307,6 @@
     });
 
     $router->mount('/admin', function() use($router, $twig) {
-        
         $router->get('/', function() use ($twig) {
             echo $twig->render('admin_dashboard.twig', array('name' => $_SESSION['ADMIN']['name']));
         });
@@ -337,7 +343,7 @@
             echo $twig->render('admin_stocks.twig', array('companies' => $result));
         });
 
-        $router->get('/stocks/{number}', function($number) use($twig) {
+        $router->get('/stock/{number}', function($number) use($twig) {
             $q = new Query('SELECT * FROM TB_COMPANY WHERE COMPANY_PK = :PK');
             $q->execute(array(':PK' => $number));
 
@@ -345,15 +351,15 @@
             echo $twig->render('admin_stock.twig', array('COMPANY' => $company));
         });
 
-        $router->post('/stocks/{number}', function ($number) use($twig) {
-            if ($_POST['action'] == "EDITAR") {
+        $router->post('/stock/{number}', function ($number) use($twig) {
+            if ($_POST['action'] == "EDIT") {
                 $q = new Query('UPDATE TB_COMPANY SET COMPANY_NAME = :NOME, COMPANY_INFO = :INFO, COMPANY_SYMBOL = :SYMBOL
-                    WHERE COMPANY_PK = :PK');
+                                WHERE COMPANY_PK = :PK');
                 $q->execute(array(':PK' => $number, ':NOME' => $_POST['company_name'], ':INFO'=>$_POST['company_info'],
                                   ':SYMBOL' =>$_POST['company_symbol']));
 
                 Redirection::to('admin/stocks');
-            } else if ($_POST['action'] == "REMOVER" ) {
+            } else if ($_POST['action'] == "REMOVE" ) {
                 $q = new Query('DELETE FROM TB_COMPANY WHERE COMPANY_PK = :PK');
                 $q->execute(array(':PK' => $number));
 
@@ -361,7 +367,7 @@
             }
         });
 
-        $router->get('/users/{number}', function ($number) use($twig) {
+        $router->get('/user/{number}', function ($number) use($twig) {
             $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
             $q->execute(array(':PK' => $number));
 
@@ -370,35 +376,20 @@
 
         });
 
-
-        $router->get('/users/{number}', function ($number) use($twig) {
-            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
-            $q->execute(array(':PK' => $number));
-
-            $user = $q->fetch();
-            echo $twig->render('admin_user.twig', array('USER' => $user));
-
-        });
-
-        $router->post('/users/{number}', function ($number) use($twig) {
-
-            // UPDATE `invest_database`.`TB_USER` SET `USER_NAME` = 'rrrw', `USER_EMAIL` = 'errre', `USER_PHONE` = '1332', `USER_ADM` = '1' WHERE (`USER_PK` = '1');
-            if($_POST['action'] == "EDITAR") {
+        $router->post('/user/{number}', function ($number) use($twig) {
+            if ($_POST['action'] == "EDIT") {
                 $q = new Query('UPDATE TB_USER SET USER_NAME = :NOME, USER_EMAIL = :EMAIL, USER_PHONE = :PHONE, USER_ADM = :ADM 
-                WHERE USER_PK = :PK');
-            $q->execute(array(':PK' => $number, ':NOME' => $_POST['user_name'], ':EMAIL'=>$_POST['user_email'],
-                             ':PHONE' =>$_POST['user_phone'], ':ADM' => $_POST['user_adm'],));
+                                WHERE USER_PK = :PK');
+                $q->execute(array(':PK' => $number, ':NOME' => $_POST['user_name'], ':EMAIL'=>$_POST['user_email'],
+                                  ':PHONE' =>$_POST['user_phone'], ':ADM' => $_POST['user_adm'],));
 
-            Redirection::to('/localhost/admin/users');
+                Redirection::to('admin/users');
 
-            }
-            
-            else if($_POST['action']=="REMOVER"){
-                // DELETE FROM nome_tabela WHERE condição
+            } else if ($_POST['action'] == "REMOVE") {
                 $q = new Query('DELETE FROM TB_USER WHERE USER_PK = :PK');
                 $q->execute(array(':PK' => $number));
 
-                Redirection::to('/localhost/admin/users');
+                Redirection::to('admin/users');
             }
         });
 
