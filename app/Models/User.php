@@ -3,6 +3,7 @@
 namespace Invest\Models;
 
 use Invest\Database\Query;
+use Invest\Exceptions\DatabaseException;
 
 class User implements Entity {
     private $pk;
@@ -16,8 +17,11 @@ class User implements Entity {
     public $phone;
     public $admin;
     
-    
-    public function __construct($login, $password = "",  $name = "", $cpf = "", $email = "", $birth = "", $phone = "", $wallet = "", $admin = "") {
+    /**
+     * Constructs an user object.
+     */
+    public function __construct($login = "", $password = "",  $name = "", $cpf = "", $email = "", 
+                                $birth = "", $phone = "", $wallet = "", $admin = "") {
         $this->login = $login;
         $this->password = password_hash($password, PASSWORD_DEFAULT);
         $this->name = $name;
@@ -28,15 +32,21 @@ class User implements Entity {
         $this->wallet = $wallet;
         $this->admin = $admin;
     }
-    
-    public function get(string $pk) : bool {
+
+    /**
+     * Fill information inside the object given an user primary key on the database.
+     * @param login The login of the user. It uses this information for retrieving the 
+     * primary key of the user.
+     */
+    public function get(string $login) : bool {
         $q = new Query('SELECT * FROM TB_USER WHERE USER_LOGIN = :LOGIN');
-        $r = $q->execute(array(':LOGIN' => $this->login));
+        $r = $q->execute(array(':LOGIN' => $login));
 
         if ($r) {
             $data = $q->fetch();
 
             $this->pk = $data['USER_PK'];
+            $this->login = $data['USER_LOGIN'];
             $this->password = $data['USER_PASSWORD'];
             $this->name = $data['USER_NAME'];
             $this->cpf = $data['USER_CPF'];
@@ -50,6 +60,9 @@ class User implements Entity {
         return $r;
     }
 
+    /**
+     * Saves the object inside the database
+     */
     public function save() : bool {
         $type = "";
         
@@ -74,6 +87,9 @@ class User implements Entity {
         return $r;
     }
 
+    /**
+     * Updates the user in the database.
+     */
     public function update() : bool {
         $q = new Query('UPDATE TB_USER SET USER_NAME = :NAME, 
                                            USER_LOGIN = :LOGIN, 
@@ -91,13 +107,19 @@ class User implements Entity {
                             ':EMAIL' => $this->email, 
                             ':PHONE' => $this->phone, 
                             ':BIRTH' => $this->birth, 
-                            ':WALLET' => $this->wallet));
+                            ':WALLET' => $this->wallet,
+                            ':PK' => $this->pk));
 
         return $r;
     }
 
+    /**
+     * Deletes the user in the database.
+     */
     public function delete() : bool {
-        $r = 0;
+        if (!isset($this->login)) {
+            return false;
+        }
 
         if (!isset($this->pk)) { 
             $q = new Query('SELECT USER_PK FROM TB_USER WHERE USER_LOGIN = :LOGIN');
