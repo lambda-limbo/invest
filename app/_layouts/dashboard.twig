@@ -34,7 +34,7 @@
       </button>
   </div>
   <div class="modal-body">
-    <form method="post" action="internal/money" spellcheck="false">
+    <form method="post" action="internal/wallet" spellcheck="false">
         <div class="form-group">
             <label for="user_wallet">Valor:</label>
             <input type="text" class="form-control" name="user_wallet" id="money" placeholder="1.551,00" required>
@@ -57,7 +57,7 @@
 {% block scripts %}
 <script>
     $('#money').mask("#.##0,00", {reverse: true});
-    
+
     var data = [
     {
         values: [

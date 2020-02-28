@@ -12,7 +12,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr class="text-center">
-                        <th scope="col">CÓDIGO</th>
+                        <th scope="col">LOGIN</th>
                         <th scope="col">NOME</th>
                         <th scope="col">EMAIL</th>
                         <th scope="col">TIPO</th>
@@ -34,7 +34,7 @@
                             {% endif %}
                         {% endfor %}
                         <td>
-                            <a href="admin/users/{{ user['USER_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
+                            <a href="admin/user/{{ user['USER_PK'] }}"class="btn btn-light"><i class="fa fa-edit"></i> EDITAR</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -60,7 +60,7 @@
       </button>
   </div>
   <div class="modal-body">
-    <form method="post" action="sign_up" spellcheck="false">
+    <form method="post" action="admin/user/new" spellcheck="false">
         <div>
             <div class="form-group">
                 <label for="name">Nome completo</label>
@@ -92,10 +92,8 @@
                 <input type="password" class="form-control" name="password"  placeholder="De preferência utilize caracteres especiais" required>
             </div>
             <div class="form-group text-right">
-                <button id="back" class="btn btn-light">VOLTAR</button>
                 <button type="submit" class="btn btn-primary">CRIAR CONTA</button>
             </div>
-
         </form> 
     </div>
 </div>

@@ -2,31 +2,31 @@
 
 
 {% block content %}
-<h1>Editar Empresa</h1>
-        <form action = "admin/stock/{{ COMPANY['COMPANY_PK'] }}" method="post">
-            <div class="form-group">
-                <input type="text" name="company_pk"value="{{COMPANY.COMPANY_PK}}" hidden>
-                <label for="user_name">Nome</label>
-                <input type="text" class="form-control" name="company_name"  value="{{COMPANY.COMPANY_NAME}}" required>
-            </div>
+<h2 class="text-uppercasew">Editar empresa</h2>
+<form action = "admin/stock/{{ COMPANY['COMPANY_PK'] }}" method="post">
+    <div class="form-group">
+        <input type="text" name="company_pk"value="{{COMPANY.COMPANY_PK}}" hidden>
+        <label for="user_name">Nome</label>
+        <input type="text" class="form-control" name="company_name"  value="{{COMPANY.COMPANY_NAME}}" required>
+    </div>
 
-            <div class="form-group">
-                <label>Informações</label>
-                <textarea name="company_info" cols="30" rows="7" class="form-control"required>{{COMPANY.COMPANY_INFO}}	
-                </textarea>
-            </div>
+    <div class="form-group">
+        <label>Informações</label>
+        <textarea name="company_info" cols="30" rows="7" class="form-control"required>{{COMPANY.COMPANY_INFO}}	
+        </textarea>
+    </div>
 
-            <div class="form-group">
-                <label for="user_phone">Símbolo</label>
-                <input type="text" class="form-control" name="company_symbol"  value="{{COMPANY.COMPANY_SYMBOL}}" required>
-            </div>
+    <div class="form-group">
+        <label for="user_phone">Símbolo</label>
+        <input type="text" class="form-control" name="company_symbol"  value="{{COMPANY.COMPANY_SYMBOL}}" required>
+    </div>
 
-            <div class="form-group text-right">
-            	<input name="action" value="EDIT" type="submit" class="btn btn-primary">
-            	<input name ="action" value= "REMOVE"type ="submit" class = "btn btn-outline-danger" >
-              </div> 
-        	</div>
-    	</form> 
+    <div class="form-group text-right">
+        <button name="action" value="SALVAR" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> SALVAR</button>
+        <button name ="action" value="REMOVER" type ="submit" class="btn btn-outline-danger"><i class="fa fa-trash"></i> REMOVER</button>
+        </div> 
+    </div>
+</form> 
 
 
 {% endblock %}

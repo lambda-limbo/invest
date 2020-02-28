@@ -13,6 +13,7 @@
     use Invest\Models\User;
 
     use Invest\Reports\Report;
+    use Invest\Models\Company;
 
 // Global routing variable for the external pages
     $routes = array('quem somos' => '/about', 
@@ -188,9 +189,10 @@
             echo $twig->render('wallet.twig');
         });
 
-        $router->post('/wallet', function() use($twig) {
-            $wallet = $_POST["user_wallet"];
+        $router->post('/wallet', function() {
             $login = $_SESSION['USER']["username"];
+
+            $money = preg_replace("/\D/", "", $_POST["user_wallet"]);
             $password = $_POST["user_pass"];
     
             $q = new Query("SELECT * FROM TB_USER WHERE USER_LOGIN = :USER");
@@ -201,7 +203,7 @@
                 echo '<script> alert ("Senha incorreta"); location.href=("/internal")</script>';
             } else {
                 $code = $_SESSION['USER']['code'];
-                $new_wallet = $_SESSION['USER']['wallet'] + $wallet;
+                $new_wallet = $_SESSION['USER']['wallet'] + $money;
     
                 $q2 = new Query("CALL P_UPDATE_WALLET(:CODIGO, :WALLET)");
                 $q2->execute(array(':CODIGO' => $code, ':WALLET' => $new_wallet));
@@ -312,7 +314,7 @@
         });
 
         $router->get('/users', function() use ($twig) {
-            $q = new Query("SELECT USER_PK, USER_NAME, USER_EMAIL, USER_ADM FROM TB_USER;");
+            $q = new Query("SELECT USER_LOGIN, USER_NAME, USER_EMAIL, USER_ADM FROM TB_USER;");
 
             try {
                 $q->execute();
@@ -331,16 +333,77 @@
             echo $twig->render('admin_stocks.twig', array('companies' => $result));
         });
 
-        $router->post('/stocks', function() use($twig) {
-            $name = $_POST["name"];
-            $info = $_POST["info"];
-            $symbol = $_POST["symbol"];
+        $router->get('/user/{number}', function ($number) use($twig) {
+            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
+            $q->execute(array(':PK' => $number));
 
-            $q = new Query("CALL P_INSERT_COMPANY(:NAME, :INFO, :SYMBOL)");
-            $q->execute(array(':NAME' => $name, ':INFO' => $info, ':SYMBOL' => $symbol));
-            $result = $q->fetchAll();
+            $user = $q->fetch();
+            echo $twig->render('admin_user.twig', array('USER' => $user));
 
-            echo $twig->render('admin_stocks.twig', array('companies' => $result));
+        });
+
+        $router->post('/user/{number}', function ($pk) use($twig) {
+            if ($_POST['action'] == "SALVAR") {
+                $q = new Query('SELECT USER_LOGIN FROM TB_USER WHERE USER_PK = :PK');
+                $q->execute(array(':PK' => $pk));
+
+                $u = new User();
+                $u->get($q->fetch()['USER_LOGIN']);
+
+                $u->name = $_POST['user_name'];
+                $u->email = $_POST['user_email'];
+                $u->cpf = $_POST['user_cpf'];
+                $u->birth = $_POST['user_birth'];
+                $u->phone = $_POST['user_phone'];
+                $u->admin = $_POST['user_type'];
+                $u->login = $_POST['user_login'];
+
+                try {
+                    $u->update();
+                } catch (DatabaseException $e) {
+                    // FIXME: Not the ideal way of dealing with this.
+                    echo $e->getMessage();
+                }
+
+                // TODO: Find a way to show the edit message to the user.
+                //echo $twig->render('admin_users.twig', array('message' => array('css' => 'alert-success',
+                //                                                                'content' => 'Informações do usuário foram salvas')));
+
+                Redirection::to('admin/users');
+            } else if ($_POST['action'] == "REMOVER") {
+                $q = new Query('SELECT USER_LOGIN FROM TB_USER WHERE USER_PK = :PK');
+                $q->execute(array(':PK' => $pk));
+
+                $u = new User();
+                $u->get($q->fetch()['USER_LOGIN']);
+
+                try {
+                    $u->delete();
+                } catch (DatabaseException $e) {
+                    // FIXME: Not the ideal way of dealing with this.
+                    echo $e->getMessage();
+                }
+
+                // TODO: Find a way to show the edit message to the user.
+                //echo $twig->render('admin_users.twig', array('message' => array('css' => 'alert-sucess',
+                //                                                                'content' => 'Usuário removido com sucesso.')));
+                Redirection::to('admin/users');
+            }
+        });
+
+        $router->post('/stock/new', function() use($twig) {
+            $c = new Company($_POST['symbol'], $_POST["name"], $_POST["info"]);
+            $c->save();
+            
+            Redirection::to('admin/stocks');
+        });
+
+        $router->post('/user/new', function() use($twig) {
+            $u = new User($_POST['login'], $_POST["password"], $_POST["name"], $_POST["cpf"], $_POST["email"], $_POST["birth"],
+                          $_POST["phone"], 0, 0);
+            $u->save();
+            
+            Redirection::to('admin/users');
         });
 
         $router->get('/stock/{number}', function($number) use($twig) {
@@ -352,44 +415,18 @@
         });
 
         $router->post('/stock/{number}', function ($number) use($twig) {
-            if ($_POST['action'] == "EDIT") {
+            if ($_POST['action'] == "SALVAR") {
                 $q = new Query('UPDATE TB_COMPANY SET COMPANY_NAME = :NOME, COMPANY_INFO = :INFO, COMPANY_SYMBOL = :SYMBOL
                                 WHERE COMPANY_PK = :PK');
                 $q->execute(array(':PK' => $number, ':NOME' => $_POST['company_name'], ':INFO'=>$_POST['company_info'],
                                   ':SYMBOL' =>$_POST['company_symbol']));
 
                 Redirection::to('admin/stocks');
-            } else if ($_POST['action'] == "REMOVE" ) {
+            } else if ($_POST['action'] == "REMOVER" ) {
                 $q = new Query('DELETE FROM TB_COMPANY WHERE COMPANY_PK = :PK');
                 $q->execute(array(':PK' => $number));
 
                 Redirection::to('admin/stocks');
-            }
-        });
-
-        $router->get('/user/{number}', function ($number) use($twig) {
-            $q = new Query('SELECT * FROM TB_USER WHERE USER_PK = :PK');
-            $q->execute(array(':PK' => $number));
-
-            $user = $q->fetch();
-            echo $twig->render('admin_user.twig', array('USER' => $user));
-
-        });
-
-        $router->post('/user/{number}', function ($number) use($twig) {
-            if ($_POST['action'] == "EDIT") {
-                $q = new Query('UPDATE TB_USER SET USER_NAME = :NOME, USER_EMAIL = :EMAIL, USER_PHONE = :PHONE, USER_ADM = :ADM 
-                                WHERE USER_PK = :PK');
-                $q->execute(array(':PK' => $number, ':NOME' => $_POST['user_name'], ':EMAIL'=>$_POST['user_email'],
-                                  ':PHONE' =>$_POST['user_phone'], ':ADM' => $_POST['user_adm'],));
-
-                Redirection::to('admin/users');
-
-            } else if ($_POST['action'] == "REMOVE") {
-                $q = new Query('DELETE FROM TB_USER WHERE USER_PK = :PK');
-                $q->execute(array(':PK' => $number));
-
-                Redirection::to('admin/users');
             }
         });
 

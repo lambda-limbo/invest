@@ -9,7 +9,7 @@
                         <h5 class="card-title">{{ company['COMPANY_SYMBOL'] }}</h5>
                         <p class="card-text">{{ company['COMPANY_INFO'] | length > 50 ? company['COMPANY_INFO'] | slice(0, 50) ~ '...' : company['COMPANY_INFO'] }}</p>
                         <div class="text-right">
-                            <a class="btn btn-outline-secondary" href="/internal/stocks/{{ company['COMPANY_PK'] }}">Ver mais</a>
+                            <a class="btn btn-outline-secondary" href="/internal/stock/{{ company['COMPANY_PK'] }}">Ver mais</a>
                         </div>
                     </div>
                 </div>

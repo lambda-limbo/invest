@@ -1,63 +1,55 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Invest\Models;
-use Invest\Models\Company;
-class CompanyHistory {
-    private $minimium;
-    private $maximum;
-    private $history_date;
-    private $opening_value;
-    private $close_value;
-    private $company;
 
-    public function __construct($minimium, $maximum, $history_date, $opening_value, $close_value, $company) {
+
+
+class CompanyHistory implements Entity {
+    private $pk;
+    public $minimium;
+    public $maximum;
+    public $date;
+    public $open;
+    public $close;
+    public $company;
+
+    public function __construct($minimium, $maximum, $date, $open, $close, $company) {
         $this->minimium = $minimium;
         $this->maximum = $maximum;
-        $this->history_date = $history_date;
-        $this->opening_value = $opening_value;
-        $this->close_value = $close_value;
+        $this->date = $date;
+        $this->open = $open;
+        $this->close = $close;
         $this->company = $company;
     }
 
-    public function getMinimium() {
-        return $this->minimium;
-    }
-    public function setMinimium($minimium) {
-        $this->minimium = $minimium;
+
+    public function get(string $pk) : bool {
+        $q = new Query('SELECT * FROM TB_COMPANY_HISTORY WHERE COMPANY_HISTORY_PK = :PK');
+		$r = $q->execute(array(':PK' => $pk));
+
+		if ($r) {
+			$data = $q->fetch();
+
+			$this->pk = $data['COMPANY_HISTORY_PK'];
+			$this->minimium = $data['COMPANY_HISTORY_MINIMIUM'];
+			$this->maximium = $data['COMPANY_HISTORY_MAXIMIUM'];
+			$this->open = $data['COMPANY_HISTORY_OPEN_VALUE'];
+			$this->close = $data['COMPANY_HISTORY_CLOSE_VALUE'];
+			$this->value = $data['COMPANY_HISTORY_VALUE'];
+		}
+
+		return $r;
     }
 
-    public function getMaximum() {
-        return $this->maximum;
-    }
-    public function setMaximum($maximum) {
-        $this->maximum = $maximum;
+    public function save() : bool {
+        
     }
 
-    public function getHistory_date() {
-        return $this->history_date;
-    }
-    public function setHistory_date($history_date) {
-        $this->history_date = $history_date;
+    public function update() : bool {
+
     }
 
-    public function getOpening_value(){
-        return $this->opening_value;
-    }
-    public function setOpening_value($opening_value) {
-        $this->opening_value = $opening_value;
-    }
+    public function delete() : bool {
 
-    public function getClose_value() {
-        return $this->close_value;
-    }
-    public function setClosevalue($close_value) {
-        $this->close_value = $close_value;
-    }
-
-    public function getCompany() {
-        return $this->company;
-    }
-    public function setCompany($company) {
-        $this->company = $company;
     }
 }
